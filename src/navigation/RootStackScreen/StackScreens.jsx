@@ -1,15 +1,11 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import {
-  SignIn,
-  CreateAccount,
-  Search,
-  Home,
-  Details,
-  Search2,
-  Profile,
-} from "../../../Screens";
+import { Search, Details, Search2, Profile } from "../../../Screens";
+import SigninScreen from "../../screens/Auth/SigninScreen";
+import CreateAccountScreen from "../../screens/Auth/CreateAccountScreen";
+import LandingScreen from "../../screens/LandingScreen";
+import HomeScreen from "../../screens/HomeScreen";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
@@ -17,25 +13,40 @@ const SearchStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
 export const AuthStackScreen = () => (
-  <AuthStack.Navigator>
+  <AuthStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+    }}
+  >
+    <AuthStack.Screen
+      name="LandingScreen"
+      component={LandingScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
     <AuthStack.Screen
       name="SignInScreen"
-      component={SignIn}
+      component={SigninScreen}
       options={{ title: "Sign In" }}
     />
     <AuthStack.Screen
       name="CreateAccountScreen"
-      component={CreateAccount}
+      component={CreateAccountScreen}
       options={{ title: "Create Account" }}
     />
   </AuthStack.Navigator>
 );
 
 export const HomeStackScreen = ({ navigation }) => (
-  <HomeStack.Navigator>
+  <HomeStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+    }}
+  >
     <HomeStack.Screen
       name="Home"
-      component={Home}
+      component={HomeScreen}
       options={{
         headerLeft: () => (
           <Icon.Button
@@ -59,7 +70,11 @@ export const HomeStackScreen = ({ navigation }) => (
 );
 
 export const SearchStackScreen = ({ navigation }) => (
-  <SearchStack.Navigator>
+  <SearchStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+    }}
+  >
     <SearchStack.Screen
       name="Search"
       options={{
@@ -80,7 +95,11 @@ export const SearchStackScreen = ({ navigation }) => (
 );
 
 export const ProfileStackScreen = ({ navigation }) => (
-  <ProfileStack.Navigator>
+  <ProfileStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+    }}
+  >
     <ProfileStack.Screen
       name="Profile"
       options={{

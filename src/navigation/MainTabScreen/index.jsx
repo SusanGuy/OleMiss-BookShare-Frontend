@@ -1,6 +1,5 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   HomeStackScreen,
@@ -27,9 +26,9 @@ const MainTabScreen = () => {
         name="ProfileTab"
         component={ProfileStackScreen}
         options={{
-          tabBarLabel: "Profile",
+          tabBarLabel: "Sell",
           tabBarIcon: ({ color }) => (
-            <Icon name="ios-notifications" color={color} size={26} />
+            <Icon name="ios-camera" color={color} size={26} />
           ),
         }}
       />
@@ -38,9 +37,19 @@ const MainTabScreen = () => {
         name="SearchTab"
         component={SearchStackScreen}
         options={{
-          tabBarLabel: "Search",
+          tabBarLabel: "Explore",
           tabBarIcon: ({ color }) => (
             <Icon name="ios-search" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="RequestTab"
+        component={SearchStackScreen}
+        options={{
+          tabBarLabel: "Request",
+          tabBarIcon: ({ color }) => (
+            <Icon name="ios-pricetag" color={color} size={26} />
           ),
         }}
       />
