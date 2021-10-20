@@ -7,8 +7,8 @@ const CustomDrawerItem = ({ onPress, label, iconName }) => {
   const { colors } = useTheme();
   return (
     <DrawerItem
-      icon={({ size, color }) => (
-        <CustomDrawerIcon name={iconName} color={colors.accentColor} />
+      icon={({ color, focused, size }) => (
+        <CustomDrawerIcon name={iconName} color={colors.primary} />
       )}
       label={label}
       onPress={onPress}

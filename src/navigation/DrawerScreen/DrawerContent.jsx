@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Title, Caption, Drawer } from "react-native-paper";
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import { DrawerContentScrollView } from "@react-navigation/drawer";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
 
 export const DrawerContent = (props) => {
