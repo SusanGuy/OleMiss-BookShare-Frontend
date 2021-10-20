@@ -9,10 +9,14 @@ export const CustomDefaultTheme = {
     ...NavigationDefaultTheme.colors,
     ...PaperDefaultTheme.colors,
 
-    accentColor: "#333",
+    accentColor: "#fff",
     primary: "#000",
-    lightGreen: "#C0F7DD",
-    cardColor: "#191D64",
+    silverSand: "#bebfc4",
+    green: "#183c28",
+    maize: "#eec643",
+    orange: "#fa824c",
+    blue: "#3c91e6",
+    lightGreen: "#a2d729",
 
     // Edge Cases
     alert: {
@@ -25,7 +29,7 @@ export const CustomDefaultTheme = {
     },
 
     // Blacks and grays
-    black: "#000",
+
     grey: "#EEEEEE",
     backgroundGrey: "#E5E5E5",
     notBlack: "#333333",
@@ -35,8 +39,6 @@ export const CustomDefaultTheme = {
     textGrey: "#A89E9E",
 
     // Lights & Brights
-
-    white: "#FFFFFF",
     notWhite: "#Fafafa",
     lightWhite: "#FBFBFB",
   },
