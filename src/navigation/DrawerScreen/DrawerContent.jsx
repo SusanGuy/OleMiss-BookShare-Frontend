@@ -52,7 +52,7 @@ export const DrawerContent = (props) => {
               }}
             />
             <CustomDrawerItem
-              iconName="git-pull-request-sharp"
+              iconName="ios-pricetag"
               label="Requested Books"
               onPress={() => {
                 props.navigation.navigate("ProfileTab", {
@@ -60,23 +60,12 @@ export const DrawerContent = (props) => {
                 });
               }}
             />
-          </Drawer.Section>
-          <Drawer.Section>
             <CustomDrawerItem
               iconName="person-sharp"
               label="Profile"
               onPress={() => {
                 props.navigation.navigate("ProfileTab", {
                   screen: "Profile",
-                });
-              }}
-            />
-            <CustomDrawerItem
-              iconName="settings-sharp"
-              label="Settings"
-              onPress={() => {
-                props.navigation.navigate("SearchTab", {
-                  screen: "Search",
                 });
               }}
             />

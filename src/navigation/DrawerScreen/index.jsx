@@ -3,7 +3,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import MainTabScreen from "../MainTabScreen";
 import { ProfileStackScreen } from "../RootStackScreen/StackScreens";
 import { DrawerContent } from "./DrawerContent";
-import { Icon } from "react-native-vector-icons/Ionicons";
+import { Ionicons as Icon } from "@expo/vector-icons";
+import RequestedScreen from "../../screens/RequestedFeedScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +28,7 @@ const DrawerScreen = () => {
         component={MainTabScreen}
       />
       <Drawer.Screen name="ProfileDrawer" component={ProfileStackScreen} />
+      <Drawer.Screen name="FeedDrawer" component={RequestedScreen} />
     </Drawer.Navigator>
   );
 };

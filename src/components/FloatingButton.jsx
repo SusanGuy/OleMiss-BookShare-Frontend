@@ -1,14 +1,21 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons as Icon } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-const FloatingButton = ({ iconName, backgroundColor, color, ...props }) => {
+const FloatingButton = ({ iconName, onPress, color, size, ...props }) => {
   return (
     <TouchableOpacity
-      {...props}
-      style={{ ...styles.FloatingActionButton, backgroundColor }}
+      onPress={onPress}
+      style={{ ...styles.FloatingActionButton, ...props }}
     >
-      <Ionicons name={iconName} size={30} color={color} />
+      <Icon
+        iconStyle={{
+          backgroundColor: "#fff",
+        }}
+        name={iconName}
+        size={size ? size : 30}
+        color={color}
+      />
     </TouchableOpacity>
   );
 };

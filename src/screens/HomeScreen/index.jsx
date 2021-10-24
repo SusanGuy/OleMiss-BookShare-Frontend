@@ -72,11 +72,7 @@ const HomeScreen = ({ navigation }) => {
           right: 10,
         }}
       >
-        <FloatingButton
-          color="#fff"
-          backgroundColor="#3c91e6"
-          iconName="add-sharp"
-        />
+        <FloatingButton color="#fff" backgroundColor="#3c91e6" iconName="add" />
       </View>
     </ScreenContainer>
   );

@@ -84,22 +84,22 @@ const DetailsScreen = ({ navigation, route }) => {
         <View style={styles.contactContainer}>
           <Text style={styles.contactOptions}>Contact Via: </Text>
           <View style={styles.buttonContainer}>
-            <TouchableOpacity
+            <FloatingButton
               onPress={() => alert("mail pressed")}
-              style={styles.contactButton}
-            >
-              <Icon name="mail" size={30} style={styles.alignedText} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => alert("sms pressed")}
-              style={{ ...styles.contactButton, marginLeft: 20 }}
-            >
-              <Icon
-                name="message-circle"
-                size={30}
-                style={styles.alignedText}
-              />
-            </TouchableOpacity>
+              iconName="mail"
+              size={30}
+              backgroundColor="#000"
+              color="#fff"
+            />
+
+            <FloatingButton
+              onPress={() => alert("mail pressed")}
+              marginLeft={20}
+              iconName="chatbubble"
+              size={30}
+              backgroundColor="#000"
+              color="#fff"
+            />
           </View>
         </View>
       </View>

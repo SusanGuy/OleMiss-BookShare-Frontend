@@ -1,11 +1,75 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import FloatingButton from "./FloatingButton";
 
 const Card = ({ item, feed }) => {
   if (feed) {
-    const {} = item;
-    return <Text>Hello</Text>;
+    const {
+      id,
+      user: { name, image },
+      title,
+      course,
+      date,
+      isbn,
+    } = item;
+    return (
+      <View style={{ ...styles.card, flexDirection: "row" }}>
+        <TouchableOpacity>
+          <Image
+            style={styles.avatarImage}
+            source={{
+              uri: image,
+            }}
+            resizeMode="cover"
+          />
+        </TouchableOpacity>
+
+        <View style={styles.requestFeedContainer}>
+          <View style={styles.requestUserContainer}>
+            <Text style={styles.userName}>{name} requested</Text>
+            <Text style={styles.date}>{date}</Text>
+          </View>
+          <Text
+            style={{
+              ...styles.title,
+              marginTop: 10,
+            }}
+          >
+            {title}
+          </Text>
+          <View style={{ ...styles.subInformation, marginTop: 10 }}>
+            <Text style={styles.info}>For {course} </Text>
+            <View
+              style={{
+                borderRightWidth: 1,
+                height: "100%",
+                borderColor: "#A89E9E",
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+            />
+            <Text style={{ ...styles.info }}>ISBN {isbn}</Text>
+          </View>
+          <View style={{ ...styles.subInformation, marginTop: 15 }}>
+            <FloatingButton
+              size={25}
+              padding={10}
+              color="#fff"
+              backgroundColor="#74758C"
+              iconName="mail"
+            />
+            <FloatingButton
+              marginLeft={20}
+              size={25}
+              padding={10}
+              color="#fff"
+              backgroundColor="#74758C"
+              iconName="chatbubbles"
+            />
+          </View>
+        </View>
+      </View>
+    );
   } else {
     const { title, authorName, image, isbn, price, condition } = item;
     return (
@@ -30,7 +94,7 @@ const Card = ({ item, feed }) => {
               marginRight: 5,
             }}
           />
-          <Text style={{ ...styles.info, flexWrap: "wrap" }}>ISBN {isbn}</Text>
+          <Text style={{ ...styles.info, flexWrap: "wrap" }}> ISBN {isbn}</Text>
         </View>
         <View style={styles.subInformation}>
           <View style={styles.priceContainer}>
@@ -39,9 +103,13 @@ const Card = ({ item, feed }) => {
           <View style={[styles.priceContainer, { backgroundColor: "#a2d729" }]}>
             <Text style={styles.alignedText}>{condition}</Text>
           </View>
-          <TouchableOpacity style={styles.CircleShapeView}>
-            <Ionicons style={styles.icon} name="bookmark" />
-          </TouchableOpacity>
+          <FloatingButton
+            size={25}
+            padding={10}
+            color="#fff"
+            backgroundColor="#Eec643"
+            iconName="bookmark"
+          />
         </View>
       </View>
     );
@@ -50,10 +118,8 @@ const Card = ({ item, feed }) => {
 
 const styles = StyleSheet.create({
   card: {
-    display: "flex",
+    flex: 1,
     flexDirection: "column",
-    marginTop: 5,
-    marginBottom: 5,
     width: "100%",
     padding: 10,
   },
@@ -66,13 +132,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    flexWrap: "wrap",
     marginTop: 20,
   },
   subInformation: {
-    display: "flex",
     flexDirection: "row",
-    flexWrap: "wrap",
     marginTop: 20,
     alignItems: "center",
   },
@@ -95,19 +158,32 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 15,
   },
-  CircleShapeView: {
-    width: 45,
-    height: 45,
-    borderRadius: 40,
-    backgroundColor: "#Eec643",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   icon: {
     fontSize: 25,
     color: "#fff",
     alignSelf: "center",
     textAlign: "center",
+  },
+  avatarImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
+  requestFeedContainer: {
+    marginLeft: 10,
+    flexDirection: "column",
+  },
+  requestUserContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+  },
+  userName: { fontSize: 15, color: "rgb(34, 27, 27)", width: "70%" },
+  date: {
+    fontSize: 12,
+    color: "#74758C",
+    width: "30%",
   },
 });
 

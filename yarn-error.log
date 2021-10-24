@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn
+  /usr/local/bin/node /usr/local/bin/yarn remove react-native-vector-icons
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/Users/susansubedi/Dev/OleMiss-BookShare-Frontend/node_modules/@babel/core/node_modules/semver/CHANGELOG.md'
+  Error: EACCES: permission denied, unlink '/Users/susansubedi/Dev/OleMiss-BookShare-Frontend/node_modules/@babel/core/node_modules/semver/README.md'
 
 npm manifest: 
   {
@@ -46,7 +46,6 @@ npm manifest:
       "react-native-reanimated": "~2.2.0",
       "react-native-safe-area-context": "3.2.0",
       "react-native-screens": "~3.4.0",
-      "react-native-vector-icons": "^8.1.0",
       "react-native-web": "~0.13.12"
     },
     "devDependencies": {
@@ -1362,7 +1361,7 @@ Lockfile:
       base64-js "^1.2.3"
       xmlbuilder "^14.0.0"
   
-  "@expo/vector-icons@^12.0.4", "@expo/vector-icons@^12.0.5":
+  "@expo/vector-icons@^12.0.4":
     version "12.0.5"
     resolved "https://registry.yarnpkg.com/@expo/vector-icons/-/vector-icons-12.0.5.tgz#bc508ad05fb7e9a3e008704977cfec6c18aa7728"
     integrity sha512-zWvHBmkpbi1KrPma6Y+r/bsGI6MjbM1MBSe6W9A4uYMLhNI5NR4JtTnqxhf7g1XdpaDtBdv5aOWKEx4d5rxnhg==
