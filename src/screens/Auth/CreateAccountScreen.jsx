@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 import { Caption, Headline, Subheading } from "react-native-paper";
@@ -30,87 +30,92 @@ const CreateAccountScreen = ({ navigation }) => {
     }
   };
   return (
-    <ScreenContainer>
-      <Headline style={styles.header}>New here? </Headline>
-      <Subheading style={styles.smallText}>
-        Sign up and explore variety of books!
-      </Subheading>
+    <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScreenContainer>
+        <Headline style={styles.header}>New here? </Headline>
+        <Subheading style={styles.smallText}>
+          Sign up and explore variety of books!
+        </Subheading>
 
-      <Animatable.View ref={validateInput}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          keyboardType="email-address"
-          returnKeyType="next"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "", email: text });
-          }}
-        />
+        <Animatable.View ref={validateInput}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            keyboardType="email-address"
+            returnKeyType="next"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "", email: text });
+            }}
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          secureTextEntry={true}
-          returnKeyType="next"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "", password: text });
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          keyboardType="phone-pad"
-          value={phone}
-          returnKeyType="next"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "", password: text });
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Classification"
-          value={classification}
-          returnKeyType="next"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "", classification: text });
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Major"
-          value={major}
-          returnKeyType="done"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "", major: text });
-          }}
-        />
-        <Text style={styles.error}>{state.errMsg}</Text>
-      </Animatable.View>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            secureTextEntry={true}
+            returnKeyType="next"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "", password: text });
+            }}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Phone Number"
+            keyboardType="phone-pad"
+            value={phone}
+            returnKeyType="next"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "", password: text });
+            }}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Classification"
+            value={classification}
+            returnKeyType="next"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "", classification: text });
+            }}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Major"
+            value={major}
+            returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "", major: text });
+            }}
+          />
+          <Text style={styles.error}>{state.errMsg}</Text>
+        </Animatable.View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => onLogin()} style={styles.loginButton}>
-          <Caption style={styles.alignedText}>Sign Up</Caption>
-        </TouchableOpacity>
-
-        <View style={styles.flexContainer}>
-          <Subheading style={{ color: "gray" }}>
-            Already have an account?
-          </Subheading>
-          <Subheading
-            onPress={() =>
-              navigation.navigate("Auth", {
-                screen: "SignInScreen",
-              })
-            }
-            style={{ fontWeight: "bold", marginLeft: 2 }}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => onLogin()}
+            style={styles.loginButton}
           >
-            Sign In
-          </Subheading>
+            <Caption style={styles.alignedText}>Sign Up</Caption>
+          </TouchableOpacity>
+
+          <View style={styles.flexContainer}>
+            <Subheading style={{ color: "gray" }}>
+              Already have an account?
+            </Subheading>
+            <Subheading
+              onPress={() =>
+                navigation.navigate("Auth", {
+                  screen: "SignInScreen",
+                })
+              }
+              style={{ fontWeight: "bold", marginLeft: 2 }}
+            >
+              Sign In
+            </Subheading>
+          </View>
         </View>
-      </View>
-    </ScreenContainer>
+      </ScreenContainer>
+    </ScrollView>
   );
 };
 

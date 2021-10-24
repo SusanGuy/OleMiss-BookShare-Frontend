@@ -1,15 +1,16 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Search, Details, Search2, Profile } from "../../../Screens";
+import { Profile } from "../../../Screens";
 import SigninScreen from "../../screens/Auth/SigninScreen";
 import CreateAccountScreen from "../../screens/Auth/CreateAccountScreen";
 import LandingScreen from "../../screens/LandingScreen";
 import HomeScreen from "../../screens/HomeScreen";
+import DetailsScreen from "../../screens/DetailsScreen";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
-const SearchStack = createStackNavigator();
+
 const ProfileStack = createStackNavigator();
 
 export const AuthStackScreen = () => (
@@ -61,37 +62,12 @@ export const HomeStackScreen = ({ navigation }) => (
     />
     <HomeStack.Screen
       name="Details"
-      component={Details}
-      options={({ route }) => ({
-        title: route.params.name,
-      })}
+      options={{
+        headerShown: false,
+      }}
+      component={DetailsScreen}
     />
   </HomeStack.Navigator>
-);
-
-export const SearchStackScreen = ({ navigation }) => (
-  <SearchStack.Navigator
-    screenOptions={{
-      headerBackTitleVisible: false,
-    }}
-  >
-    <SearchStack.Screen
-      name="Search"
-      options={{
-        headerLeft: () => (
-          <Icon.Button
-            name="menu-outline"
-            size={25}
-            color="#000"
-            backgroundColor="#fff"
-            onPress={() => navigation.openDrawer()}
-          ></Icon.Button>
-        ),
-      }}
-      component={Search}
-    />
-    <SearchStack.Screen name="Search2" component={Search2} />
-  </SearchStack.Navigator>
 );
 
 export const ProfileStackScreen = ({ navigation }) => (

@@ -1,17 +1,27 @@
 import React from "react";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   HomeStackScreen,
   ProfileStackScreen,
-  SearchStackScreen,
 } from "../RootStackScreen/StackScreens";
+import RequestedScreen from "../../screens/RequestedFeedScreen";
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-const MainTabScreen = () => {
+const MainTabScreen = ({ navigation }) => {
   return (
-    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: "#fff",
+        tabBarStyle: {
+          backgroundColor: "#000",
+        },
+      }}
+      initialRouteName="Home"
+      shifting={false}
+    >
       <Tab.Screen
         name="HomeTab"
         component={HomeStackScreen}
@@ -34,19 +44,19 @@ const MainTabScreen = () => {
       />
 
       <Tab.Screen
-        name="SearchTab"
-        component={SearchStackScreen}
+        name="Feed"
+        component={RequestedScreen}
         options={{
-          tabBarLabel: "Explore",
-          tabBarIcon: ({ color }) => (
-            <Icon name="ios-search" color={color} size={26} />
+          headerLeft: () => (
+            <Icon.Button
+              name="menu-outline"
+              size={25}
+              color="#000"
+              backgroundColor="#fff"
+              onPress={() => navigation.openDrawer()}
+            ></Icon.Button>
           ),
-        }}
-      />
-      <Tab.Screen
-        name="RequestTab"
-        component={SearchStackScreen}
-        options={{
+          headerShown: true,
           tabBarLabel: "Request",
           tabBarIcon: ({ color }) => (
             <Icon name="ios-pricetag" color={color} size={26} />

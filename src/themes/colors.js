@@ -34,9 +34,12 @@ export const CustomDefaultTheme = {
     backgroundGrey: "#E5E5E5",
     notBlack: "#333333",
     lightGrey: "#ECEFF1",
+    placeholderGray: "#b2b1b4",
     darkGrey: "#74758C",
     smallTextGrey: "#BBBBBB",
     textGrey: "#A89E9E",
+    borderGrey: "#d6d7db",
+    greyTextColor: "rgb(34, 27, 27)",
 
     // Lights & Brights
     notWhite: "#Fafafa",

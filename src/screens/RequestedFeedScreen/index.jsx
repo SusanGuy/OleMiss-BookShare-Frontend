@@ -1,61 +1,68 @@
 import React from "react";
-import { View, TouchableHighlight, FlatList, Text } from "react-native";
+import { View, FlatList, Text } from "react-native";
 import Card from "../../components/Card";
 import FloatingButton from "../../components/FloatingButton";
 import HorizontalLine from "../../components/HorizontalLine";
 import ScreenContainer from "../../components/ScreenContainer";
 
-const books = [
+const requestedBooks = [
   {
     id: "1",
-    title: "Foundation",
-    authorName: "Greg Shields",
+    user: {
+      name: "John Doe",
+      image:
+        "https://cdn4.iconfinder.com/data/icons/user-avatar-10/64/60-superman-512.png",
+    },
+    title: "Fundamentals of Computer Science",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
+    course: "CSCI 211",
+    date: "3 days ago",
     isbn: 1356996,
-    price: 13.54,
-    condition: "Used",
   },
   {
     id: "2",
-    title: "Foundation & Empire",
-    authorName: "Greg Shields",
+    title: "Fundamentals of Computer Science",
+    user: {
+      name: "Jane Doe",
+      image:
+        "https://cdn4.iconfinder.com/data/icons/avatars-xmas-giveaway/128/batman_hero_avatar_comics-512.png",
+    },
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
+    course: "CSCI 211",
+    date: "3 days ago",
     isbn: 1356996,
-    price: 13.54,
-    condition: "New",
   },
   {
     id: "3",
-    title: "Design For everyday",
-    authorName: "Greg Shields",
+    title: "Fundamentals of Computer Science",
+    user: {
+      name: "Foo Bar",
+      image:
+        "https://blog.teachlr.com/wp-content/uploads/2016/06/hero-avatar.png",
+    },
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
+    course: "CSCI 211",
+    date: "3 days ago",
     isbn: 1356996,
-    price: 13.54,
-    condition: "Used",
   },
 ];
 
-const HomeScreen = ({ navigation }) => {
+const RequestedScreen = ({ navigation }) => {
   return (
     <ScreenContainer>
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={({ id }) => id}
-        data={books}
+        data={requestedBooks}
         renderItem={({ item, index }) => {
           return (
             <>
-              <TouchableHighlight
-                onPress={() => navigation.push("Details")}
-                activeOpacity={1}
-                underlayColor="#eee"
-              >
-                <Card item={item} />
-              </TouchableHighlight>
-              {index < books.length - 1 && (
+              <Card item={item} feed />
+
+              {index < requestedBooks.length - 1 && (
                 <HorizontalLine marginBottom={20} marginTop={20} />
               )}
             </>
@@ -82,4 +89,4 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-export default HomeScreen;
+export default RequestedScreen;

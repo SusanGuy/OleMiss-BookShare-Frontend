@@ -2,26 +2,23 @@ import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
 
-const FloatingButton = (props) => {
+const FloatingButton = ({ iconName, backgroundColor, color, ...props }) => {
   return (
-    <TouchableOpacity style={style.FloatingActionButton}>
-      <Ionicons name="add-sharp" size={30} color="#fff" />
+    <TouchableOpacity
+      {...props}
+      style={{ ...styles.FloatingActionButton, backgroundColor }}
+    >
+      <Ionicons name={iconName} size={30} color={color} />
     </TouchableOpacity>
   );
 };
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
   FloatingActionButton: {
-    // borderWidth: 2,
+    padding: 20,
+    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
-    width: 70,
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    height: 70,
-    backgroundColor: "#3c91e6",
-    borderRadius: 100,
   },
 });
 
