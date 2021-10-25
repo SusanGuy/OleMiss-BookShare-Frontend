@@ -2,8 +2,8 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import {
+  BookmarkStackScreen,
   HomeStackScreen,
-  ProfileStackScreen,
 } from "../RootStackScreen/StackScreens";
 import RequestedScreen from "../../screens/RequestedFeedScreen";
 
@@ -34,7 +34,7 @@ const MainTabScreen = ({ navigation }) => {
       />
       <Tab.Screen
         name="ProfileTab"
-        component={ProfileStackScreen}
+        component={BookmarkStackScreen}
         options={{
           tabBarLabel: "Sell",
           tabBarIcon: ({ color }) => (
@@ -56,7 +56,6 @@ const MainTabScreen = ({ navigation }) => {
               onPress={() => navigation.openDrawer()}
             ></Icon.Button>
           ),
-
           headerShown: true,
           tabBarLabel: "Request",
           tabBarIcon: ({ color }) => (

@@ -1,8 +1,7 @@
 import React from "react";
-import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
-import Card from "../../components/Card";
-import FloatingButton from "../../components/FloatingButton";
-import SearchBarHeader from "../../components/SearchBarHeader";
+import { FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import { ListCard } from "../../components/Card";
+import ScreenContainer from "../../components/ScreenContainer";
 
 const books = [
   {
@@ -14,6 +13,7 @@ const books = [
     isbn: 1356996,
     price: 13.54,
     condition: "Used",
+    date: "3 days ago",
     active: true,
   },
   {
@@ -25,6 +25,7 @@ const books = [
     isbn: 1356996,
     price: 13.54,
     condition: "New",
+    date: "3 days ago",
     active: true,
   },
   {
@@ -36,46 +37,36 @@ const books = [
     isbn: 1356996,
     price: 13.54,
     condition: "Used",
+    date: "3 days ago",
     active: false,
   },
 ];
 
-const HomeScreen = ({ navigation }) => {
+const SoldBooksScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <SearchBarHeader navigation={navigation} />
-      <View style={{ flex: 1, backgroundColor: "#eee" }}>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScreenContainer>
         <FlatList
           showsVerticalScrollIndicator={false}
           keyExtractor={({ id }) => id}
           data={books}
-          renderItem={({ item }) => {
-            return (
+          renderItem={({ item }) =>
+            item.active ? (
               <TouchableOpacity
                 onPress={() => navigation.push("Details")}
                 activeOpacity={1}
                 underlayColor="#eee"
               >
-                <Card item={item} />
+                <ListCard item={item} />
               </TouchableOpacity>
-            );
-          }}
+            ) : (
+              <ListCard item={item} />
+            )
+          }
         />
-      </View>
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
-          bottom: 15,
-          right: 10,
-        }}
-      >
-        <FloatingButton color="#fff" backgroundColor="#3c91e6" iconName="add" />
-      </View>
+      </ScreenContainer>
     </SafeAreaView>
   );
 };
 
-export default HomeScreen;
+export default SoldBooksScreen;

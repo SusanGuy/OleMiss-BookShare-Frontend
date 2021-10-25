@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn remove react-native-vector-icons
+  /usr/local/bin/node /usr/local/bin/yarn add react-native-swipeable
 
 PATH: 
   /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/Users/susansubedi/Dev/OleMiss-BookShare-Frontend/node_modules/@babel/core/node_modules/semver/README.md'
+  Error: EACCES: permission denied, unlink '/Users/susansubedi/Dev/OleMiss-BookShare-Frontend/node_modules/@babel/core/node_modules/semver/CHANGELOG.md'
 
 npm manifest: 
   {

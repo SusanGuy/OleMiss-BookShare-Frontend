@@ -1,18 +1,20 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Profile } from "../../../Screens";
 import SigninScreen from "../../screens/Auth/SigninScreen";
 import CreateAccountScreen from "../../screens/Auth/CreateAccountScreen";
 import LandingScreen from "../../screens/LandingScreen";
 import HomeScreen from "../../screens/HomeScreen";
 import DetailsScreen from "../../screens/DetailsScreen";
 import BookmarksScreen from "../../screens/BookmarksScreen";
+import SoldBooksScreen from "../../screens/SoldBooksScreen";
+import RequestedBooksScreen from "../../screens/RequestedBooksScreen/RequestedBooksScreen";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
 const BookmarkStack = createStackNavigator();
-const ProfileStack = createStackNavigator();
+const SoldBooksStack = createStackNavigator();
+const RequestedBooksStack = createStackNavigator();
 
 export const AuthStackScreen = () => (
   <AuthStack.Navigator
@@ -91,14 +93,9 @@ export const BookmarkStackScreen = ({ navigation }) => (
   </BookmarkStack.Navigator>
 );
 
-export const ProfileStackScreen = ({ navigation }) => (
-  <ProfileStack.Navigator
-    screenOptions={{
-      headerBackTitleVisible: false,
-    }}
-  >
-    <ProfileStack.Screen
-      name="Profile"
+export const RequestedBooksStackScreen = ({ navigation }) => (
+  <RequestedBooksStack.Navigator>
+    <RequestedBooksStack.Screen
       options={{
         headerLeft: () => (
           <Icon.Button
@@ -110,7 +107,36 @@ export const ProfileStackScreen = ({ navigation }) => (
           ></Icon.Button>
         ),
       }}
-      component={Profile}
+      name="Requested Books"
+      component={RequestedBooksScreen}
     />
-  </ProfileStack.Navigator>
+  </RequestedBooksStack.Navigator>
+);
+
+export const SoldBooksStackScreen = ({ navigation }) => (
+  <SoldBooksStack.Navigator>
+    <SoldBooksStack.Screen
+      options={{
+        headerLeft: () => (
+          <Icon.Button
+            name="menu-outline"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.openDrawer()}
+          ></Icon.Button>
+        ),
+      }}
+      name="Sold Books"
+      component={SoldBooksScreen}
+    />
+    <SoldBooksStack.Screen
+      name="Details"
+      options={{
+        headerBackTitleVisible: false,
+        headerShown: false,
+      }}
+      component={DetailsScreen}
+    />
+  </SoldBooksStack.Navigator>
 );

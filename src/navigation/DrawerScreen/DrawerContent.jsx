@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Title, Caption, Drawer } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
+import { AuthContext } from "../../../context";
 
 export const DrawerContent = (props) => {
+  const { signOut } = useContext(AuthContext);
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -46,25 +48,21 @@ export const DrawerContent = (props) => {
               iconName="book-sharp"
               label="Sold Books"
               onPress={() => {
-                props.navigation.navigate("Profile");
+                props.navigation.navigate("SoldBooksDrawer");
               }}
             />
             <CustomDrawerItem
               iconName="ios-pricetag"
               label="Requested Books"
               onPress={() => {
-                props.navigation.navigate("ProfileTab", {
-                  screen: "Profile",
-                });
+                props.navigation.navigate("RequestedBooksDrawer");
               }}
             />
             <CustomDrawerItem
               iconName="person-sharp"
               label="Profile"
               onPress={() => {
-                props.navigation.navigate("ProfileTab", {
-                  screen: "Profile",
-                });
+                props.navigation.navigate("BookmarksDrawer");
               }}
             />
           </Drawer.Section>
@@ -74,11 +72,7 @@ export const DrawerContent = (props) => {
         <CustomDrawerItem
           iconName="log-out-sharp"
           label="Sign Out"
-          onPress={() => {
-            props.navigation.navigate("SearchTab", {
-              screen: "Search",
-            });
-          }}
+          onPress={() => signOut()}
         />
       </Drawer.Section>
     </View>

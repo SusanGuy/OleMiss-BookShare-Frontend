@@ -1,7 +1,6 @@
 import React from "react";
-import { View, FlatList, SafeAreaView } from "react-native";
-import Card from "../../components/Card";
-import FloatingButton from "../../components/FloatingButton";
+import { FlatList, SafeAreaView } from "react-native";
+import { ListCard } from "../../components/Card";
 import ScreenContainer from "../../components/ScreenContainer";
 
 const books = [
@@ -18,6 +17,7 @@ const books = [
     course: "CSCI 211",
     date: "3 days ago",
     isbn: 1356996,
+    active: true,
   },
   {
     id: "2",
@@ -32,6 +32,7 @@ const books = [
     course: "CSCI 211",
     date: "3 days ago",
     isbn: 1356996,
+    active: true,
   },
   {
     id: "3",
@@ -46,6 +47,7 @@ const books = [
     course: "CSCI 211",
     date: "3 days ago",
     isbn: 1356996,
+    active: false,
   },
   {
     id: "4",
@@ -60,10 +62,11 @@ const books = [
     course: "CSCI 211",
     date: "3 days ago",
     isbn: 1356996,
+    active: false,
   },
 ];
 
-const RequestedScreen = ({ navigation }) => {
+const RequestedBooksScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScreenContainer>
@@ -71,29 +74,11 @@ const RequestedScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyExtractor={({ id }) => id}
           data={books}
-          renderItem={({ item }) => {
-            return <Card item={item} feed />;
-          }}
+          renderItem={({ item }) => <ListCard requests item={item} />}
         />
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            position: "absolute",
-            bottom: 15,
-            right: 10,
-          }}
-        >
-          <FloatingButton
-            color="#fff"
-            backgroundColor="#3c91e6"
-            iconName="add"
-          />
-        </View>
       </ScreenContainer>
     </SafeAreaView>
   );
 };
 
-export default RequestedScreen;
+export default RequestedBooksScreen;
