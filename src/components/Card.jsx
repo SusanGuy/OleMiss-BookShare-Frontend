@@ -73,7 +73,9 @@ const Card = ({ item, feed }) => {
   } else {
     const { title, authorName, image, isbn, price, condition } = item;
     return (
-      <View style={styles.card}>
+      <View
+        style={[styles.card, { backgroundColor: "#fafafa", marginBottom: 40 }]}
+      >
         <Image
           style={styles.image}
           source={{
@@ -81,35 +83,41 @@ const Card = ({ item, feed }) => {
           }}
           resizeMode="cover"
         />
-
-        <Text style={styles.title}>{title}</Text>
-        <View style={styles.subInformation}>
-          <Text style={styles.info}>By {authorName} </Text>
-          <View
-            style={{
-              borderRightWidth: 1,
-              height: "100%",
-              borderColor: "#A89E9E",
-              marginLeft: 5,
-              marginRight: 5,
-            }}
-          />
-          <Text style={{ ...styles.info, flexWrap: "wrap" }}> ISBN {isbn}</Text>
-        </View>
-        <View style={styles.subInformation}>
-          <View style={styles.priceContainer}>
-            <Text style={styles.alignedText}>${price}</Text>
+        <View style={{ padding: 8 }}>
+          <Text style={styles.title}>{title}</Text>
+          <View style={styles.subInformation}>
+            <Text style={styles.info}>By {authorName} </Text>
+            <View
+              style={{
+                borderRightWidth: 1,
+                height: "100%",
+                borderColor: "#A89E9E",
+                marginLeft: 5,
+                marginRight: 5,
+              }}
+            />
+            <Text style={{ ...styles.info, flexWrap: "wrap" }}>
+              {" "}
+              ISBN {isbn}
+            </Text>
           </View>
-          <View style={[styles.priceContainer, { backgroundColor: "#a2d729" }]}>
-            <Text style={styles.alignedText}>{condition}</Text>
+          <View style={styles.subInformation}>
+            <View style={styles.priceContainer}>
+              <Text style={styles.alignedText}>${price}</Text>
+            </View>
+            <View
+              style={[styles.priceContainer, { backgroundColor: "#a2d729" }]}
+            >
+              <Text style={styles.alignedText}>{condition}</Text>
+            </View>
+            <FloatingButton
+              size={25}
+              padding={10}
+              color="#fff"
+              backgroundColor="#Eec643"
+              iconName="bookmark"
+            />
           </View>
-          <FloatingButton
-            size={25}
-            padding={10}
-            color="#fff"
-            backgroundColor="#Eec643"
-            iconName="bookmark"
-          />
         </View>
       </View>
     );
@@ -121,7 +129,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     width: "100%",
-    padding: 10,
   },
 
   image: {
@@ -173,6 +180,7 @@ const styles = StyleSheet.create({
   requestFeedContainer: {
     marginLeft: 10,
     flexDirection: "column",
+    padding: 10,
   },
   requestUserContainer: {
     flexDirection: "row",

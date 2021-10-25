@@ -1,9 +1,8 @@
 import React from "react";
-import { View, TouchableHighlight, FlatList, Text } from "react-native";
+import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import Card from "../../components/Card";
 import FloatingButton from "../../components/FloatingButton";
-import HorizontalLine from "../../components/HorizontalLine";
-import ScreenContainer from "../../components/ScreenContainer";
+import SearchBarHeader from "../../components/SearchBarHeader";
 
 const books = [
   {
@@ -40,28 +39,26 @@ const books = [
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <ScreenContainer>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        keyExtractor={({ id }) => id}
-        data={books}
-        renderItem={({ item, index }) => {
-          return (
-            <>
-              <TouchableHighlight
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <SearchBarHeader navigation={navigation} />
+      <View style={{ flex: 1 }}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyExtractor={({ id }) => id}
+          data={books}
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableOpacity
                 onPress={() => navigation.push("Details")}
                 activeOpacity={1}
                 underlayColor="#eee"
               >
                 <Card item={item} />
-              </TouchableHighlight>
-              {index < books.length - 1 && (
-                <HorizontalLine marginBottom={20} marginTop={20} />
-              )}
-            </>
-          );
-        }}
-      />
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </View>
       <View
         style={{
           display: "flex",
@@ -74,7 +71,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <FloatingButton color="#fff" backgroundColor="#3c91e6" iconName="add" />
       </View>
-    </ScreenContainer>
+    </SafeAreaView>
   );
 };
 

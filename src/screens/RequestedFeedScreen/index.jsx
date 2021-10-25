@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, Text } from "react-native";
+import { View, FlatList, SafeAreaView } from "react-native";
 import Card from "../../components/Card";
 import FloatingButton from "../../components/FloatingButton";
 import HorizontalLine from "../../components/HorizontalLine";
@@ -66,36 +66,42 @@ const requestedBooks = [
 
 const RequestedScreen = ({ navigation }) => {
   return (
-    <ScreenContainer>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        keyExtractor={({ id }) => id}
-        data={requestedBooks}
-        renderItem={({ item, index }) => {
-          return (
-            <>
-              <Card item={item} feed />
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ScreenContainer>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          keyExtractor={({ id }) => id}
+          data={requestedBooks}
+          renderItem={({ item, index }) => {
+            return (
+              <>
+                <Card item={item} feed />
 
-              {index < requestedBooks.length - 1 && (
-                <HorizontalLine marginBottom={20} marginTop={20} />
-              )}
-            </>
-          );
-        }}
-      />
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
-          bottom: 15,
-          right: 10,
-        }}
-      >
-        <FloatingButton color="#fff" backgroundColor="#3c91e6" iconName="add" />
-      </View>
-    </ScreenContainer>
+                {index < requestedBooks.length - 1 && (
+                  <HorizontalLine marginBottom={20} marginTop={20} />
+                )}
+              </>
+            );
+          }}
+        />
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            position: "absolute",
+            bottom: 15,
+            right: 10,
+          }}
+        >
+          <FloatingButton
+            color="#fff"
+            backgroundColor="#3c91e6"
+            iconName="add"
+          />
+        </View>
+      </ScreenContainer>
+    </SafeAreaView>
   );
 };
 

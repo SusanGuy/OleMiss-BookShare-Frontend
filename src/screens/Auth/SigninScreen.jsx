@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 import { Caption, Headline, Subheading } from "react-native-paper";
@@ -25,61 +25,67 @@ const SigninScreen = ({ navigation }) => {
     }
   };
   return (
-    <ScreenContainer>
-      <Headline style={styles.header}>Welcome Back! </Headline>
-      <Subheading style={styles.smallText}>Sign in to continue</Subheading>
+    <SafeAreaView style={{ backgroundColor: "#fff", flex: 1 }}>
+      <ScreenContainer>
+        <Headline style={styles.header}>Welcome Back! </Headline>
+        <Subheading style={styles.smallText}>Sign in to continue</Subheading>
 
-      <Animatable.View ref={validateInput}>
-        <TextInput
-          value={email}
-          style={styles.input}
-          placeholder="Email"
-          keyboardType="email-address"
-          returnKeyType="next"
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "" });
-            setState({ ...state, email: text });
-          }}
-        />
+        <Animatable.View ref={validateInput}>
+          <TextInput
+            value={email}
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            returnKeyType="next"
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "" });
+              setState({ ...state, email: text });
+            }}
+          />
 
-        <TextInput
-          value={password}
-          style={styles.input}
-          placeholder="Password"
-          returnKeyType="done"
-          secureTextEntry={true}
-          onChangeText={(text) => {
-            setState({ ...state, errMsg: "" });
-            setState({ ...state, password: text });
-          }}
-        />
-        <Text style={styles.error}>{state.errMsg}</Text>
-      </Animatable.View>
+          <TextInput
+            value={password}
+            style={styles.input}
+            placeholder="Password"
+            returnKeyType="done"
+            secureTextEntry={true}
+            onChangeText={(text) => {
+              setState({ ...state, errMsg: "" });
+              setState({ ...state, password: text });
+            }}
+          />
+          <Text style={styles.error}>{state.errMsg}</Text>
+        </Animatable.View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity onPress={() => onLogin()} style={styles.loginButton}>
-          <Caption style={styles.alignedText}>Login Now</Caption>
-        </TouchableOpacity>
-
-        <Subheading style={{ marginTop: 50 }}>Forgot Password ?</Subheading>
-
-        <View style={styles.flexContainer}>
-          <Subheading style={{ color: "gray" }}>
-            Don't have an account?
-          </Subheading>
-          <Subheading
-            style={{ fontWeight: "bold", marginLeft: 2 }}
-            onPress={() =>
-              navigation.navigate("Auth", {
-                screen: "CreateAccountScreen",
-              })
-            }
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => onLogin()}
+            style={styles.loginButton}
           >
-            Sign Up
-          </Subheading>
+            <Caption style={styles.alignedText}>Login Now</Caption>
+          </TouchableOpacity>
+
+          <Subheading style={{ marginTop: 50 }}>Forgot Password ?</Subheading>
+
+          <View style={styles.flexContainer}>
+            <Subheading style={{ color: "gray" }}>
+              Don't have an account?
+            </Subheading>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Auth", {
+                  screen: "CreateAccountScreen",
+                })
+              }
+            >
+              <Subheading style={{ fontWeight: "bold", marginLeft: 2 }}>
+                Sign Up
+              </Subheading>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScreenContainer>
+      </ScreenContainer>
+    </SafeAreaView>
   );
 };
 

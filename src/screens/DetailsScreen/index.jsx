@@ -7,16 +7,18 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import FloatingButton from "../../components/FloatingButton";
 import HorizontalLine from "../../components/HorizontalLine";
-import { Feather as Icon, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const height = Dimensions.get("window").height;
 
 const DetailsScreen = ({ navigation, route }) => {
-  return (
+  const newLocal = (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
+      <StatusBar hidden={true} />
       <View style={{ position: "relative" }}>
         <Image
           style={styles.image}
@@ -105,6 +107,7 @@ const DetailsScreen = ({ navigation, route }) => {
       </View>
     </ScrollView>
   );
+  return newLocal;
 };
 
 const styles = StyleSheet.create({

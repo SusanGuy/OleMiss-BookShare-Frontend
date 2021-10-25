@@ -56,6 +56,7 @@ const MainTabScreen = ({ navigation }) => {
               onPress={() => navigation.openDrawer()}
             ></Icon.Button>
           ),
+
           headerShown: true,
           tabBarLabel: "Request",
           tabBarIcon: ({ color }) => (
