@@ -39,9 +39,7 @@ export const DrawerContent = (props) => {
               iconName="bookmarks-sharp"
               label="Bookmarks"
               onPress={() => {
-                props.navigation.navigate("ProfileTab", {
-                  screen: "Profile",
-                });
+                props.navigation.navigate("BookmarksDrawer");
               }}
             />
             <CustomDrawerItem

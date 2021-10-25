@@ -1,7 +1,10 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MainTabScreen from "../MainTabScreen";
-import { ProfileStackScreen } from "../RootStackScreen/StackScreens";
+import {
+  BookmarkStackScreen,
+  ProfileStackScreen,
+} from "../RootStackScreen/StackScreens";
 import { DrawerContent } from "./DrawerContent";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import RequestedScreen from "../../screens/RequestedFeedScreen";
@@ -18,17 +21,10 @@ const DrawerScreen = () => {
         headerShown: false,
       }}
     >
-      <Drawer.Screen
-        name="HomeDrawer"
-        options={{
-          drawerIcon: ({ color }) => (
-            <Icon name="ios-home" color={color} size={26} />
-          ),
-        }}
-        component={MainTabScreen}
-      />
+      <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
       <Drawer.Screen name="ProfileDrawer" component={ProfileStackScreen} />
       <Drawer.Screen name="FeedDrawer" component={RequestedScreen} />
+      <Drawer.Screen name="BookmarksDrawer" component={BookmarkStackScreen} />
     </Drawer.Navigator>
   );
 };

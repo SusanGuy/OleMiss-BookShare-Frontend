@@ -46,7 +46,7 @@ const DetailsScreen = ({ navigation, route }) => {
           <FloatingButton
             color="#fff"
             backgroundColor="#eec643"
-            iconName="bookmark"
+            iconName="bookmark-outline"
           />
         </View>
         <View style={styles.types}>

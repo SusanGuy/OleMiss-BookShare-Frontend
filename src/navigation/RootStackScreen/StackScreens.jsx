@@ -7,10 +7,11 @@ import CreateAccountScreen from "../../screens/Auth/CreateAccountScreen";
 import LandingScreen from "../../screens/LandingScreen";
 import HomeScreen from "../../screens/HomeScreen";
 import DetailsScreen from "../../screens/DetailsScreen";
+import BookmarksScreen from "../../screens/BookmarksScreen";
 
 const AuthStack = createStackNavigator();
 const HomeStack = createStackNavigator();
-
+const BookmarkStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 
 export const AuthStackScreen = () => (
@@ -60,6 +61,34 @@ export const HomeStackScreen = ({ navigation }) => (
       component={DetailsScreen}
     />
   </HomeStack.Navigator>
+);
+
+export const BookmarkStackScreen = ({ navigation }) => (
+  <BookmarkStack.Navigator>
+    <BookmarkStack.Screen
+      options={{
+        headerLeft: () => (
+          <Icon.Button
+            name="menu-outline"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.openDrawer()}
+          ></Icon.Button>
+        ),
+      }}
+      name="Bookmarks"
+      component={BookmarksScreen}
+    />
+    <BookmarkStack.Screen
+      name="Details"
+      options={{
+        headerBackTitleVisible: false,
+        headerShown: false,
+      }}
+      component={DetailsScreen}
+    />
+  </BookmarkStack.Navigator>
 );
 
 export const ProfileStackScreen = ({ navigation }) => (

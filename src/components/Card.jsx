@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import FloatingButton from "./FloatingButton";
 
-const Card = ({ item, feed }) => {
+const Card = ({ item, feed, bookmarks }) => {
   if (feed) {
     const {
       id,
@@ -11,6 +11,7 @@ const Card = ({ item, feed }) => {
       course,
       date,
       isbn,
+      active,
     } = item;
     return (
       <View style={{ ...styles.card, flexDirection: "row" }}>
@@ -71,19 +72,34 @@ const Card = ({ item, feed }) => {
       </View>
     );
   } else {
-    const { title, authorName, image, isbn, price, condition } = item;
+    const { title, authorName, image, isbn, price, condition, active } = item;
+
     return (
       <View
-        style={[styles.card, { backgroundColor: "#fafafa", marginBottom: 40 }]}
+        style={[
+          styles.card,
+          {
+            backgroundColor: "#fafafa",
+            marginBottom: 40,
+            opacity: !active && bookmarks ? 0.6 : 1,
+          },
+        ]}
       >
-        <Image
-          style={styles.image}
-          source={{
-            uri: image,
-          }}
-          resizeMode="cover"
-        />
-        <View style={{ padding: 8 }}>
+        <View>
+          <Image
+            style={styles.image}
+            source={{
+              uri: image,
+            }}
+            resizeMode="cover"
+          />
+          {bookmarks && !active && (
+            <View style={styles.overlay}>
+              <Text style={styles.soldText}>SOLD</Text>
+            </View>
+          )}
+        </View>
+        <View style={{ padding: 10 }}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.subInformation}>
             <Text style={styles.info}>By {authorName} </Text>
@@ -100,6 +116,7 @@ const Card = ({ item, feed }) => {
               {" "}
               ISBN {isbn}
             </Text>
+            {bookmarks && <Text></Text>}
           </View>
           <View style={styles.subInformation}>
             <View style={styles.priceContainer}>
@@ -110,13 +127,16 @@ const Card = ({ item, feed }) => {
             >
               <Text style={styles.alignedText}>{condition}</Text>
             </View>
-            <FloatingButton
-              size={25}
-              padding={10}
-              color="#fff"
-              backgroundColor="#Eec643"
-              iconName="bookmark"
-            />
+            {bookmarks && active && (
+              <FloatingButton
+                onPress={() => alert("Removed from your bookmark!")}
+                size={20}
+                padding={10}
+                color="#fff"
+                backgroundColor="#Eec643"
+                iconName="bookmark"
+              />
+            )}
           </View>
         </View>
       </View>
@@ -134,6 +154,22 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: 200,
+  },
+
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.6)",
+  },
+
+  soldText: {
+    position: "absolute",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 50,
+    top: "50%",
+    left: "50%",
+    marginLeft: -70,
+    marginTop: -40,
   },
 
   title: {
@@ -164,6 +200,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#FFF",
     fontSize: 15,
+    fontWeight: "bold",
   },
 
   icon: {
