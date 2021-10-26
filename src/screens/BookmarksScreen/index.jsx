@@ -5,11 +5,10 @@ import Card from "../../components/Card";
 const books = [
   {
     id: "1",
-    title: "Foundation",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
+    title: "Coding freedom: the ethics and aesthetics of hacking",
+    authorName: "Coleman, E. Gabriella",
+    image: "https://images-na.ssl-images-amazon.com/images/I/51pyHCYsVqL.jpg",
+    isbn: 9794814093679,
     price: 13.54,
     condition: "Used",
     active: true,
@@ -20,7 +19,7 @@ const books = [
     authorName: "Greg Shields",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
+    isbn: 9793148611917,
     price: 13.54,
     condition: "New",
     active: false,
@@ -28,10 +27,9 @@ const books = [
   {
     id: "3",
     title: "Design For everyday",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
+    authorName: "Don Norman",
+    image: "https://images-na.ssl-images-amazon.com/images/I/81zpLhP1gWL.jpg",
+    isbn: 9790064851946,
     price: 13.54,
     condition: "Used",
     active: false,

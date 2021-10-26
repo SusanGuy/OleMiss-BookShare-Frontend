@@ -23,7 +23,7 @@ const DetailsScreen = ({ navigation, route }) => {
         <Image
           style={styles.image}
           source={{
-            uri: "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
+            uri: "https://images-na.ssl-images-amazon.com/images/I/51-QdU4PjmL._SY445_SX342_QL70_ML2_.jpg",
           }}
           resizeMode="cover"
         />
@@ -54,12 +54,12 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={styles.type}>CSCI 412</Text>
         </View>
         <HorizontalLine marginTop={10} marginBottom={10} />
-        <Text style={styles.title}>Fundamentals of Computer Systems</Text>
+        <Text style={styles.title}>Beginning Rust Programming</Text>
         <View style={styles.organizerInfo}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.infoText}>Posted By </Text>
             <TouchableOpacity>
-              <Text style={styles.organizer}>Susan Subedi</Text>
+              <Text style={styles.organizer}>Clark Kent</Text>
             </TouchableOpacity>
           </View>
           <Text style={styles.infoText}>30 mins ago</Text>
@@ -68,7 +68,7 @@ const DetailsScreen = ({ navigation, route }) => {
         <View style={styles.amountConditionContainer}>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Price</Text>
-            <Text style={styles.amountConditionValue}>$20.20</Text>
+            <Text style={styles.amountConditionValue}>$11.54</Text>
           </View>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Condition</Text>
@@ -78,8 +78,8 @@ const DetailsScreen = ({ navigation, route }) => {
         <View style={styles.authorInfo}>
           <Text style={styles.authorKey}>Authors</Text>
           <View style={styles.authorValue}>
-            <Text style={styles.type}>John Walters</Text>
-            <Text style={styles.type}>Charlie Walters</Text>
+            <Text style={styles.type}>MESSIER</Text>
+            <Text style={styles.type}>RIC</Text>
           </View>
         </View>
         <HorizontalLine marginTop={15} marginBottom={10} />

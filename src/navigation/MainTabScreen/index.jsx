@@ -2,10 +2,9 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import {
-  BookmarkStackScreen,
+  FeedStackScreen,
   HomeStackScreen,
 } from "../RootStackScreen/StackScreens";
-import RequestedScreen from "../../screens/RequestedFeedScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +33,7 @@ const MainTabScreen = ({ navigation }) => {
       />
       <Tab.Screen
         name="ProfileTab"
-        component={BookmarkStackScreen}
+        component={FeedStackScreen}
         options={{
           tabBarLabel: "Sell",
           tabBarIcon: ({ color }) => (
@@ -44,19 +43,9 @@ const MainTabScreen = ({ navigation }) => {
       />
 
       <Tab.Screen
-        name="Feed"
-        component={RequestedScreen}
+        name="FeedTab"
+        component={FeedStackScreen}
         options={{
-          headerLeft: () => (
-            <Icon.Button
-              name="menu-outline"
-              size={25}
-              color="#000"
-              backgroundColor="#fff"
-              onPress={() => navigation.openDrawer()}
-            ></Icon.Button>
-          ),
-          headerShown: true,
           tabBarLabel: "Request",
           tabBarIcon: ({ color }) => (
             <Icon name="ios-pricetag" color={color} size={26} />

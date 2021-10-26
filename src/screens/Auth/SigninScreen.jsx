@@ -17,7 +17,7 @@ const SigninScreen = ({ navigation }) => {
   const validateInput = useRef();
 
   const onLogin = () => {
-    if (state.email == "susan" && state.password == "12345") {
+    if (state.email == "ssubedi1@go.olemiss.edu" && state.password == "12345") {
       signIn();
     } else {
       validateInput.current.shake(800);

@@ -15,13 +15,13 @@ const books = [
     title: "Fundamentals of Computer Science",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    course: "CSCI 211",
-    date: "3 days ago",
-    isbn: 1356996,
+    course: "CSCI 111",
+    date: "3 mins ago",
+    isbn: 9796016375225,
   },
   {
     id: "2",
-    title: "Fundamentals of Computer Science",
+    title: "Programming in C++",
     user: {
       name: "Bruce Wayne",
       image:
@@ -29,13 +29,13 @@ const books = [
     },
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    course: "CSCI 211",
-    date: "3 days ago",
-    isbn: 1356996,
+    course: "CSCI 259",
+    date: "an hour ago",
+    isbn: 9799363776721,
   },
   {
     id: "3",
-    title: "Fundamentals of Computer Science",
+    title: "Computer Simulation",
     user: {
       name: "Barry Allen",
       image:
@@ -43,13 +43,13 @@ const books = [
     },
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    course: "CSCI 211",
+    course: "CSCI 405",
     date: "3 days ago",
-    isbn: 1356996,
+    isbn: 9784475853231,
   },
   {
     id: "4",
-    title: "Fundamentals of Computer Science",
+    title: "Fundamentals of Robotics Programming",
     user: {
       name: "Diana Prince",
       image:
@@ -59,7 +59,7 @@ const books = [
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     course: "CSCI 211",
     date: "3 days ago",
-    isbn: 1356996,
+    isbn: 9795071927653,
   },
 ];
 

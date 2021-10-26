@@ -22,7 +22,12 @@ const LeftSwipeActions = ({ requests }) => {
 };
 const RightSwipeActions = ({ active, bookmarks }) => {
   return (
-    <View style={styles.rightSwipeActionContainer}>
+    <View
+      style={{
+        ...styles.rightSwipeActionContainer,
+        marginBottom: bookmarks && 40,
+      }}
+    >
       {active && !bookmarks && (
         <TouchableOpacity
           style={{
@@ -45,6 +50,7 @@ const RightSwipeActions = ({ active, bookmarks }) => {
       <TouchableOpacity
         style={{
           backgroundColor: "#D91848",
+
           width: bookmarks && 100,
           borderTopRightRadius: !bookmarks ? 10 : 0,
           borderBottomRightRadius: !bookmarks ? 10 : 0,
@@ -85,7 +91,9 @@ export const ListCard = ({ item, requests }) => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={styles.info}>Posted {date} </Text>
+        <Text style={styles.info}>
+          {requests ? "Requested" : "Posted"} {date}
+        </Text>
 
         <Text style={{ ...styles.info }}>
           Status:{" "}
@@ -200,7 +208,13 @@ const Card = ({ item, feed, bookmarks }) => {
     const { title, authorName, image, isbn, price, condition, active } = item;
     const cardValue = (
       <View style={[styles.card, { opacity: !active && bookmarks ? 0.6 : 1 }]}>
-        <View style={{ position: "relative" }}>
+        <View
+          style={{
+            position: "relative",
+            borderTopWidth: 1,
+            borderColor: "#bebfc4",
+          }}
+        >
           <Image
             style={styles.image}
             source={{
@@ -236,10 +250,15 @@ const Card = ({ item, feed, bookmarks }) => {
           </View>
           <View style={styles.subInformation}>
             <View style={styles.priceContainer}>
-              <Text style={styles.alignedText}>${price}</Text>
+              <Text style={styles.alignedText}>${price.toFixed(2)}</Text>
             </View>
             <View
-              style={[styles.priceContainer, { backgroundColor: "#a2d729" }]}
+              style={[
+                styles.priceContainer,
+                {
+                  backgroundColor: condition === "New" ? "#a2d729" : "#eec643",
+                },
+              ]}
             >
               <Text style={styles.alignedText}>{condition}</Text>
             </View>
@@ -274,12 +293,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     backgroundColor: "#fff",
-    marginBottom: 20,
+    marginBottom: 40,
   },
   feedCard: {
     borderRadius: 10,
     padding: 10,
     flexDirection: "row",
+    marginBottom: 20,
   },
 
   image: {

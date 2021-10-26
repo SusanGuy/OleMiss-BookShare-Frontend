@@ -11,7 +11,7 @@ const books = [
       image:
         "https://cdn4.iconfinder.com/data/icons/user-avatar-10/64/60-superman-512.png",
     },
-    title: "Fundamentals of Computer Science",
+    title: "Weapons of Math Destruction",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     course: "CSCI 211",
@@ -21,7 +21,7 @@ const books = [
   },
   {
     id: "2",
-    title: "Fundamentals of Computer Science",
+    title: "Artificial Intelligence",
     user: {
       name: "Bruce Wayne",
       image:
@@ -30,13 +30,13 @@ const books = [
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     course: "CSCI 211",
-    date: "3 days ago",
+    date: "a week ago",
     isbn: 1356996,
     active: true,
   },
   {
     id: "3",
-    title: "Fundamentals of Computer Science",
+    title: "Parallel Programming",
     user: {
       name: "Barry Allen",
       image:
@@ -45,13 +45,13 @@ const books = [
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     course: "CSCI 211",
-    date: "3 days ago",
+    date: "10 days ago",
     isbn: 1356996,
     active: false,
   },
   {
     id: "4",
-    title: "Fundamentals of Computer Science",
+    title: "Introduction to Algorithms",
     user: {
       name: "Diana Prince",
       image:
@@ -60,7 +60,7 @@ const books = [
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     course: "CSCI 211",
-    date: "3 days ago",
+    date: "a month ago",
     isbn: 1356996,
     active: false,
   },

@@ -6,19 +6,19 @@ import ScreenContainer from "../../components/ScreenContainer";
 const books = [
   {
     id: "1",
-    title: "Foundation",
+    title: "Information Storage and Retrieval",
     authorName: "Greg Shields",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     isbn: 1356996,
     price: 13.54,
     condition: "Used",
-    date: "3 days ago",
+    date: "a day ago",
     active: true,
   },
   {
     id: "2",
-    title: "Foundation & Empire",
+    title: "Fundamentals of Computer System",
     authorName: "Greg Shields",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
@@ -30,14 +30,14 @@ const books = [
   },
   {
     id: "3",
-    title: "Design For everyday",
+    title: "Introduction to Java Programming",
     authorName: "Greg Shields",
     image:
       "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
     isbn: 1356996,
     price: 13.54,
     condition: "Used",
-    date: "3 days ago",
+    date: "a month ago",
     active: false,
   },
 ];

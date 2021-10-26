@@ -15,13 +15,13 @@ export const DrawerContent = (props) => {
             <View style={{ flexDirection: "row", marginTop: 15 }}>
               <Avatar.Image
                 source={{
-                  uri: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg",
+                  uri: "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
                 }}
                 size={50}
               />
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                <Title style={styles.title}>John Doe</Title>
-                <Caption style={styles.caption}>@j_doe</Caption>
+                <Title style={styles.title}>Susan Subedi</Title>
+                <Caption style={styles.caption}>@ssubedi1</Caption>
               </View>
             </View>
           </View>
@@ -41,28 +41,28 @@ export const DrawerContent = (props) => {
               iconName="bookmarks-sharp"
               label="Bookmarks"
               onPress={() => {
-                props.navigation.navigate("BookmarksDrawer");
+                props.navigation.navigate("Bookmarks");
               }}
             />
             <CustomDrawerItem
               iconName="book-sharp"
               label="Sold Books"
               onPress={() => {
-                props.navigation.navigate("SoldBooksDrawer");
+                props.navigation.navigate("Sold Books");
               }}
             />
             <CustomDrawerItem
               iconName="ios-pricetag"
               label="Requested Books"
               onPress={() => {
-                props.navigation.navigate("RequestedBooksDrawer");
+                props.navigation.navigate("Requested Books");
               }}
             />
             <CustomDrawerItem
               iconName="person-sharp"
               label="Profile"
               onPress={() => {
-                props.navigation.navigate("BookmarksDrawer");
+                props.navigation.navigate("Requested Books");
               }}
             />
           </Drawer.Section>

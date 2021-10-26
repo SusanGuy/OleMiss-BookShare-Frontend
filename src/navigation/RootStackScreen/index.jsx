@@ -11,7 +11,7 @@ const RootStackScreen = ({ userToken }) => (
       headerShown: false,
     }}
   >
-    {!userToken ? (
+    {userToken ? (
       <RootStack.Screen
         name="App"
         component={Drawer}
