@@ -23,7 +23,7 @@ const DetailsScreen = ({ navigation, route }) => {
         <Image
           style={styles.image}
           source={{
-            uri: "https://images-na.ssl-images-amazon.com/images/I/51-QdU4PjmL._SY445_SX342_QL70_ML2_.jpg",
+            uri: "https://wallpapercave.com/wp/wp4624320.jpg",
           }}
           resizeMode="cover"
         />
@@ -54,7 +54,9 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={styles.type}>CSCI 412</Text>
         </View>
         <HorizontalLine marginTop={10} marginBottom={10} />
-        <Text style={styles.title}>Beginning Rust Programming</Text>
+        <Text style={styles.title}>
+          Coding freedom: the ethics and aesthetics of hacking
+        </Text>
         <View style={styles.organizerInfo}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.infoText}>Posted By </Text>
@@ -68,7 +70,7 @@ const DetailsScreen = ({ navigation, route }) => {
         <View style={styles.amountConditionContainer}>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Price</Text>
-            <Text style={styles.amountConditionValue}>$11.54</Text>
+            <Text style={styles.amountConditionValue}>$0</Text>
           </View>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Condition</Text>
@@ -78,8 +80,7 @@ const DetailsScreen = ({ navigation, route }) => {
         <View style={styles.authorInfo}>
           <Text style={styles.authorKey}>Authors</Text>
           <View style={styles.authorValue}>
-            <Text style={styles.type}>MESSIER</Text>
-            <Text style={styles.type}>RIC</Text>
+            <Text style={styles.type}>Gabriella Coleman</Text>
           </View>
         </View>
         <HorizontalLine marginTop={15} marginBottom={10} />

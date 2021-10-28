@@ -9,8 +9,7 @@ const books = [
     id: "1",
     title: "BEGINNING RUST PROGRAMMING",
     authorName: "MESSIER, RIC",
-    image:
-      "https://images-na.ssl-images-amazon.com/images/I/51-QdU4PjmL._SY445_SX342_QL70_ML2_.jpg",
+    image: "https://wallpaperaccess.com/full/186244.jpg",
     isbn: 9784041839997,
     price: 11.54,
     condition: "Used",
@@ -20,8 +19,7 @@ const books = [
     id: "2",
     title: "Network Programming with Go",
     authorName: "Woodbeck,Adam",
-    image:
-      "https://d3525k1ryd2155.cloudfront.net/f/884/500/9781718500884.RH.0.x.jpg",
+    image: "https://wallpaperaccess.com/full/1560128.jpg",
     isbn: 9793762616862,
     price: 33.5,
     condition: "New",
@@ -32,7 +30,7 @@ const books = [
     id: "4",
     title: "Coding freedom: the ethics and aesthetics of hacking",
     authorName: "Coleman, E. Gabriella",
-    image: "https://images-na.ssl-images-amazon.com/images/I/51pyHCYsVqL.jpg",
+    image: "https://wallpapercave.com/wp/wp4624320.jpg",
     isbn: 9794814093679,
     price: 0,
     condition: "Used",
@@ -40,9 +38,10 @@ const books = [
   },
   {
     id: "5",
-    title: "Programming with Types: with examples in TypeScript",
+    title: "Programming with Types: with examples in Elixir",
     authorName: "Riscutia,Vlad",
-    image: "https://images-na.ssl-images-amazon.com/images/I/714PnvSJGML.jpg",
+    image:
+      "https://c4.wallpaperflare.com/wallpaper/674/729/123/code-elixir-programming-wallpaper-preview.jpg",
     isbn: 9789718480847,
     price: 19.2,
     condition: "Used",
@@ -53,7 +52,7 @@ const books = [
     title: "Functional programming in R",
     authorName: "Mailund,Thomas",
     image:
-      "https://i5.walmartimages.com/asr/e728b160-1012-4a7d-b695-310ed3096ca4.a0b9616e88e41c88f959c52ef03947f3.jpeg",
+      "https://i.pinimg.com/originals/41/82/a9/4182a9dd330c6442c4a1fbc78274d838.png",
     isbn: 9790839944491,
     price: 22,
     condition: "New",

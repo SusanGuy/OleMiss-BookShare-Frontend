@@ -25,7 +25,7 @@ const RightSwipeActions = ({ active, bookmarks }) => {
     <View
       style={{
         ...styles.rightSwipeActionContainer,
-        marginBottom: bookmarks && 40,
+        marginBottom: bookmarks ? 40 : 20,
       }}
     >
       {active && !bookmarks && (
@@ -163,14 +163,18 @@ const Card = ({ item, feed, bookmarks }) => {
             <Text style={styles.userName}>{name} requested</Text>
             <Text style={styles.date}>{date}</Text>
           </View>
-          <Text
-            style={{
-              ...styles.title,
-              marginTop: 10,
-            }}
-          >
-            {title}
-          </Text>
+          <View style={{ width: "90%", flexGrow: 1, flex: 1 }}>
+            <Text
+              style={{
+                ...styles.title,
+
+                marginTop: 10,
+              }}
+            >
+              {title}
+            </Text>
+          </View>
+
           <View style={{ ...styles.subInformation, marginTop: 10 }}>
             <Text style={styles.info}>For {course} </Text>
             <View
