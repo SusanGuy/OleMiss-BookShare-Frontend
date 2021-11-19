@@ -7,7 +7,7 @@ const HorizontalLine = ({ marginTop, marginBottom }) => {
       style={{
         marginTop,
         marginBottom,
-        borderBottomColor: "#ECEFF1",
+        borderBottomColor: "#fff",
         borderBottomWidth: 1,
       }}
     />

@@ -1,6 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthContext } from "./context";
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { CustomDefaultTheme } from "./src/themes/colors";
 import { Provider as PaperProvider } from "react-native-paper";
 import RootStackScreen from "./src/navigation/RootStackScreen";
@@ -38,12 +39,14 @@ export default () => {
   }
 
   return (
-    <PaperProvider theme={CustomDefaultTheme}>
-      <AuthContext.Provider value={authContext}>
-        <NavigationContainer theme={CustomDefaultTheme}>
-          <RootStackScreen userToken={userToken} />
-        </NavigationContainer>
-      </AuthContext.Provider>
-    </PaperProvider>
+    <ActionSheetProvider>
+      <PaperProvider theme={CustomDefaultTheme}>
+        <AuthContext.Provider value={authContext}>
+          <NavigationContainer theme={CustomDefaultTheme}>
+            <RootStackScreen userToken={userToken} />
+          </NavigationContainer>
+        </AuthContext.Provider>
+      </PaperProvider>
+    </ActionSheetProvider>
   );
 };

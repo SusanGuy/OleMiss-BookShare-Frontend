@@ -8,13 +8,16 @@ import HomeScreen from "../../screens/HomeScreen";
 import DetailsScreen from "../../screens/DetailsScreen";
 import BookmarksScreen from "../../screens/BookmarksScreen";
 import SoldBooksScreen from "../../screens/SoldBooksScreen";
-import RequestedBooksScreen from "../../screens/RequestedBooksScreen/RequestedBooksScreen";
 import RequestedScreen from "../../screens/RequestedFeedScreen";
+import ProfileScreen from "../../screens/ProfileScreen";
+import EditProfileScreen from "../../screens/EditProfileScreen";
+import RequestedBooksScreen from "../../screens/RequestedBooksScreen/RequestedBooksScreen";
+import {
+  horizontalAnimation,
+  verticalAnimation,
+} from "../../constants/animation";
 
 const AuthStack = createStackNavigator();
-const HomeStack = createStackNavigator();
-const FeedStack = createStackNavigator();
-
 export const AuthStackScreen = () => (
   <AuthStack.Navigator
     screenOptions={{
@@ -41,10 +44,12 @@ export const AuthStackScreen = () => (
   </AuthStack.Navigator>
 );
 
+const HomeStack = createStackNavigator();
 export const HomeStackScreen = ({ navigation }) => (
   <HomeStack.Navigator
     screenOptions={{
       headerBackTitleVisible: false,
+      ...verticalAnimation,
     }}
   >
     <HomeStack.Screen
@@ -54,27 +59,7 @@ export const HomeStackScreen = ({ navigation }) => (
         headerShown: false,
       }}
     />
-    <HomeStack.Screen
-      name="Bookmarks"
-      component={BookmarksScreen}
-      options={{
-        headerShown: true,
-      }}
-    />
-    <HomeStack.Screen
-      name="Requested Books"
-      component={RequestedBooksScreen}
-      options={{
-        headerShown: true,
-      }}
-    />
-    <HomeStack.Screen
-      name="Sold Books"
-      component={SoldBooksScreen}
-      options={{
-        headerShown: true,
-      }}
-    />
+
     <HomeStack.Screen
       name="Details"
       options={{
@@ -85,6 +70,7 @@ export const HomeStackScreen = ({ navigation }) => (
   </HomeStack.Navigator>
 );
 
+const FeedStack = createStackNavigator();
 export const FeedStackScreen = ({ navigation }) => (
   <FeedStack.Navigator
     screenOptions={{
@@ -107,33 +93,124 @@ export const FeedStackScreen = ({ navigation }) => (
         headerShown: true,
       }}
     />
-    <FeedStack.Screen
+  </FeedStack.Navigator>
+);
+
+const BookmarksStack = createStackNavigator();
+export const BookmarksStackScreen = ({ navigation }) => (
+  <BookmarksStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+      ...verticalAnimation,
+    }}
+  >
+    <BookmarksStack.Screen
       name="Bookmarks"
+      options={{
+        headerLeft: () => (
+          <Icon.Button
+            name="close"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.pop()}
+          ></Icon.Button>
+        ),
+        headerShown: true,
+      }}
       component={BookmarksScreen}
-      options={{
-        headerShown: true,
-      }}
     />
-    <FeedStack.Screen
-      name="Requested Books"
-      component={RequestedBooksScreen}
-      options={{
-        headerShown: true,
-      }}
-    />
-    <FeedStack.Screen
-      name="Sold Books"
-      component={SoldBooksScreen}
-      options={{
-        headerShown: true,
-      }}
-    />
-    <FeedStack.Screen
+    <BookmarksStack.Screen
       name="Details"
       options={{
         headerShown: false,
       }}
       component={DetailsScreen}
     />
-  </FeedStack.Navigator>
+  </BookmarksStack.Navigator>
+);
+
+const RequestedBooksStack = createStackNavigator();
+export const RequestedBooksStackScreen = ({ navigation }) => (
+  <RequestedBooksStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+    }}
+  >
+    <RequestedBooksStack.Screen
+      name="Requested Books"
+      options={{
+        headerLeft: () => (
+          <Icon.Button
+            name="close"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.pop()}
+          ></Icon.Button>
+        ),
+        headerShown: true,
+      }}
+      component={RequestedBooksScreen}
+    />
+  </RequestedBooksStack.Navigator>
+);
+
+const SoldBooksStack = createStackNavigator();
+export const SoldBooksStackScreen = ({ navigation }) => (
+  <SoldBooksStack.Navigator
+    screenOptions={{
+      ...verticalAnimation,
+      headerBackTitleVisible: false,
+    }}
+  >
+    <SoldBooksStack.Screen
+      name="Sold Books"
+      options={{
+        headerLeft: () => (
+          <Icon.Button
+            name="close"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.pop()}
+          ></Icon.Button>
+        ),
+        headerShown: true,
+      }}
+      component={SoldBooksScreen}
+    />
+    <SoldBooksStack.Screen
+      name="Details"
+      options={{
+        headerShown: false,
+      }}
+      component={DetailsScreen}
+    />
+  </SoldBooksStack.Navigator>
+);
+
+const ProfileStack = createStackNavigator();
+export const ProfileStackScreen = ({ navigation }) => (
+  <ProfileStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+      ...horizontalAnimation,
+    }}
+  >
+    <ProfileStack.Screen
+      name="Profile"
+      options={{
+        headerShown: false,
+      }}
+      component={ProfileScreen}
+    />
+    <ProfileStack.Screen
+      name="Edit Profile"
+      options={{
+        headerShown: true,
+      }}
+      component={EditProfileScreen}
+    />
+  </ProfileStack.Navigator>
 );

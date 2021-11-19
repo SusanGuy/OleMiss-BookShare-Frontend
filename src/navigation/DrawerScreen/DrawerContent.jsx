@@ -41,28 +41,32 @@ export const DrawerContent = (props) => {
               iconName="bookmarks-sharp"
               label="Bookmarks"
               onPress={() => {
-                props.navigation.navigate("Bookmarks");
+                props.navigation.navigate("BookmarksScreen");
+                props.navigation.toggleDrawer();
               }}
             />
             <CustomDrawerItem
               iconName="book-sharp"
               label="Sold Books"
               onPress={() => {
-                props.navigation.navigate("Sold Books");
+                props.navigation.navigate("SoldBooksScreen");
+                props.navigation.toggleDrawer();
               }}
             />
             <CustomDrawerItem
               iconName="ios-pricetag"
               label="Requested Books"
               onPress={() => {
-                props.navigation.navigate("Requested Books");
+                props.navigation.navigate("RequestedBooksScreen");
+                props.navigation.toggleDrawer();
               }}
             />
             <CustomDrawerItem
               iconName="person-sharp"
               label="Profile"
               onPress={() => {
-                props.navigation.navigate("Requested Books");
+                props.navigation.navigate("ProfileScreen");
+                props.navigation.toggleDrawer();
               }}
             />
           </Drawer.Section>

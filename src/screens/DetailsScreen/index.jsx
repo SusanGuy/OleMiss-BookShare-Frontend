@@ -28,15 +28,11 @@ const DetailsScreen = ({ navigation, route }) => {
           resizeMode="cover"
         />
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
           style={styles.backButton}
         >
-          <Ionicons
-            name="chevron-back-outline"
-            size={18}
-            style={styles.alignedText}
-          >
-            Back
+          <Ionicons name="close" size={20} style={styles.alignedText}>
+            Close
           </Ionicons>
         </TouchableOpacity>
       </View>
@@ -238,6 +234,7 @@ const styles = StyleSheet.create({
   },
   alignedText: {
     color: "#FFF",
+    fontWeight: "bold",
   },
 });
 

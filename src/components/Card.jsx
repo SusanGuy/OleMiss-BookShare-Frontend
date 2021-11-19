@@ -63,7 +63,7 @@ const RightSwipeActions = ({ active, bookmarks }) => {
   );
 };
 
-export const ListCard = ({ item, requests }) => {
+export const ListCard = ({ item, requests, profile }) => {
   const [swiped, setSwiped] = useState(false);
   const { title, date, active } = item;
   const returnValue = (
@@ -72,15 +72,24 @@ export const ListCard = ({ item, requests }) => {
         ...styles.card,
         ...styles.feedCard,
         flexDirection: "column",
-        opacity: !active ? 0.3 : 1,
+        backgroundColor: profile ? "#eee" : "#fff",
+        opacity: !profile && !active ? 0.3 : 1,
         borderRadius: !swiped ? 10 : 0,
       }}
     >
       <Text
-        style={{
-          ...styles.title,
-          marginTop: 10,
-        }}
+        style={
+          !profile
+            ? {
+                ...styles.title,
+                marginTop: 10,
+              }
+            : {
+                fontSize: 15,
+                fontWeight: "bold",
+                marginTop: 5,
+              }
+        }
       >
         {title}
       </Text>
@@ -95,17 +104,19 @@ export const ListCard = ({ item, requests }) => {
           {requests ? "Requested" : "Posted"} {date}
         </Text>
 
-        <Text style={{ ...styles.info }}>
-          Status:{" "}
-          <Text
-            style={{
-              color: active ? "#4BB543" : "#D91848",
-              fontWeight: "bold",
-            }}
-          >
-            {active ? "Active" : requests ? "Found" : "Sold"}
+        {!profile && (
+          <Text style={{ ...styles.info }}>
+            Status:{" "}
+            <Text
+              style={{
+                color: active ? "#4BB543" : "#D91848",
+                fontWeight: "bold",
+              }}
+            >
+              {active ? "Active" : requests ? "Found" : "Sold"}
+            </Text>
           </Text>
-        </Text>
+        )}
       </View>
     </View>
   );

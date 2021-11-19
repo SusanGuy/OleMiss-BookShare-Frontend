@@ -92,7 +92,11 @@ const HomeScreen = ({ navigation }) => {
           right: 10,
         }}
       >
-        <FloatingButton color="#fff" backgroundColor="#3c91e6" iconName="add" />
+        <FloatingButton
+          color="#fafafa"
+          backgroundColor="#3c91e6"
+          iconName="add"
+        />
       </View>
     </SafeAreaView>
   );
