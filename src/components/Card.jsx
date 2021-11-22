@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import FloatingButton from "./FloatingButton";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Ionicons as Icon } from "@expo/vector-icons";
+import { sendEmail, sendSMS } from "../utils/contact";
 
 const LeftSwipeActions = ({ requests }) => {
   return (
@@ -50,7 +51,6 @@ const RightSwipeActions = ({ active, bookmarks }) => {
       <TouchableOpacity
         style={{
           backgroundColor: "#D91848",
-
           width: bookmarks && 100,
           borderTopRightRadius: !bookmarks ? 10 : 0,
           borderBottomRightRadius: !bookmarks ? 10 : 0,
@@ -150,6 +150,7 @@ const Card = ({ item, feed, bookmarks }) => {
       title,
       course,
       date,
+      edition,
       isbn,
     } = item;
     return (
@@ -199,8 +200,12 @@ const Card = ({ item, feed, bookmarks }) => {
             />
             <Text style={{ ...styles.info }}>ISBN {isbn}</Text>
           </View>
+          <View style={{ ...styles.subInformation, marginTop: 10 }}>
+            <Text style={styles.info}>Edition: {edition} </Text>
+          </View>
           <View style={{ ...styles.subInformation, marginTop: 15 }}>
             <FloatingButton
+              onPress={() => sendEmail("anilpanta2@gmail.com", title, true)}
               size={25}
               padding={10}
               color="#fff"
@@ -208,6 +213,7 @@ const Card = ({ item, feed, bookmarks }) => {
               iconName="mail"
             />
             <FloatingButton
+              onPress={() => sendSMS("6627158218", title, true)}
               marginLeft={20}
               size={25}
               padding={10}

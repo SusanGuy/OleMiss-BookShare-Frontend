@@ -12,11 +12,12 @@ import {
 import FloatingButton from "../../components/FloatingButton";
 import HorizontalLine from "../../components/HorizontalLine";
 import { Ionicons } from "@expo/vector-icons";
+import { sendEmail, sendSMS } from "../../utils/contact";
 
 const height = Dimensions.get("window").height;
 
 const DetailsScreen = ({ navigation, route }) => {
-  const newLocal = (
+  return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <StatusBar hidden={true} />
       <View style={{ position: "relative" }}>
@@ -88,7 +89,7 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={styles.contactOptions}>Contact Via: </Text>
           <View style={styles.buttonContainer}>
             <FloatingButton
-              onPress={() => alert("mail pressed")}
+              onPress={() => sendEmail("anilpanta2@gmail.com", "Coding freedom: the ethics and aesthetics of hacking")}
               iconName="mail"
               size={30}
               backgroundColor="#000"
@@ -96,7 +97,12 @@ const DetailsScreen = ({ navigation, route }) => {
             />
 
             <FloatingButton
-              onPress={() => alert("mail pressed")}
+              onPress={() =>
+                sendSMS(
+                  "6627158218",
+                  "Coding freedom: the ethics and aesthetics of hacking"
+                )
+              }
               marginLeft={20}
               iconName="chatbubble"
               size={30}
@@ -108,7 +114,6 @@ const DetailsScreen = ({ navigation, route }) => {
       </View>
     </ScrollView>
   );
-  return newLocal;
 };
 
 const styles = StyleSheet.create({

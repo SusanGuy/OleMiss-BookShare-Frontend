@@ -19,6 +19,7 @@ const books = [
     course: "CSCI 111",
     date: "3 mins ago",
     isbn: 9796016375225,
+    edition: 1,
   },
   {
     id: "2",
@@ -33,6 +34,7 @@ const books = [
     course: "CSCI 259",
     date: "an hour ago",
     isbn: 9799363776721,
+    edition: 2,
   },
   {
     id: "3",
@@ -47,6 +49,7 @@ const books = [
     course: "CSCI 405",
     date: "3 days ago",
     isbn: 9784475853231,
+    edition: 3,
   },
   {
     id: "4",
@@ -61,6 +64,7 @@ const books = [
     course: "CSCI 211",
     date: "3 days ago",
     isbn: 9795071927653,
+    edition: 4,
   },
 ];
 
