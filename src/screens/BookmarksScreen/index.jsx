@@ -1,6 +1,7 @@
 import React from "react";
 import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import Card from "../../components/Card";
+import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 
 const books = [
   {
@@ -12,6 +13,7 @@ const books = [
     price: 0,
     condition: "Used",
     active: true,
+    edition: 1,
   },
   {
     id: "2",
@@ -23,6 +25,7 @@ const books = [
     price: 13.54,
     condition: "New",
     active: false,
+    edition: 11,
   },
   {
     id: "3",
@@ -33,10 +36,18 @@ const books = [
     price: 88,
     condition: "Used",
     active: false,
+    edition: 9,
   },
 ];
 
 const BookmarksScreen = ({ navigation }) => {
+  if (books.length == 0) {
+    return (
+      <EmptyListPlaceholder>
+        You haven't added any Books to your Bookmarks yet
+      </EmptyListPlaceholder>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={{ flex: 1 }}>

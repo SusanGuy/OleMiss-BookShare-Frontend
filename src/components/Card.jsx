@@ -220,7 +220,16 @@ const Card = ({ item, feed, bookmarks }) => {
       </View>
     );
   } else {
-    const { title, authorName, image, isbn, price, condition, active } = item;
+    const {
+      title,
+      authorName,
+      image,
+      isbn,
+      price,
+      condition,
+      active,
+      edition,
+    } = item;
     const cardValue = (
       <View style={[styles.card, { opacity: !active && bookmarks ? 0.6 : 1 }]}>
         <View
@@ -247,7 +256,7 @@ const Card = ({ item, feed, bookmarks }) => {
         <View style={{ padding: 10 }}>
           <Text style={styles.title}>{title}</Text>
           <View style={styles.subInformation}>
-            <Text style={styles.info}>By {authorName} </Text>
+            <Text style={styles.info}>{edition}th edition </Text>
             <View
               style={{
                 borderRightWidth: 1,

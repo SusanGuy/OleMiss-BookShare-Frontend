@@ -4,6 +4,7 @@ import { Ionicons as Icon } from "@expo/vector-icons";
 import {
   FeedStackScreen,
   HomeStackScreen,
+  SellBookStackScreen,
 } from "../RootStackScreen/StackScreens";
 
 const Tab = createBottomTabNavigator();
@@ -33,16 +34,11 @@ const MainTabScreen = ({ navigation }) => {
       />
       <Tab.Screen
         name="SellTab"
-        component={FeedStackScreen}
+        component={SellBookStackScreen}
         options={{
           tabBarLabel: "Sell",
           tabBarIcon: ({ color }) => (
-            <Icon
-              onPress={() => navigation.navigate("SellBookScreen")}
-              name="ios-camera"
-              color={color}
-              size={26}
-            />
+            <Icon name="ios-camera" color={color} size={26} />
           ),
         }}
       />

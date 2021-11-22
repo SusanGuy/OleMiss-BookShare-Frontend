@@ -72,6 +72,10 @@ const DetailsScreen = ({ navigation, route }) => {
             <Text style={styles.amountConditionKey}>Condition</Text>
             <Text style={styles.amountConditionValue}>Used</Text>
           </View>
+          <View style={styles.amountConditionInfo}>
+            <Text style={styles.amountConditionKey}>Edition</Text>
+            <Text style={styles.amountConditionValue}>9</Text>
+          </View>
         </View>
         <View style={styles.authorInfo}>
           <Text style={styles.authorKey}>Authors</Text>

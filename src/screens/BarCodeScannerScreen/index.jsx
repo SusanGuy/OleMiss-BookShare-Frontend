@@ -41,7 +41,7 @@ const BarCodeScannerScreen = ({ navigation }) => {
         }}
       >
         <TouchableOpacity
-          onPress={() => navigation.pop()}
+          onPress={() => navigation.goBack()}
           style={{
             marginTop: 20,
             borderRadius: "50%",

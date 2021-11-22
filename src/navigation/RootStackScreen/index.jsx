@@ -1,6 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import CameraComponent from "../../components/Camera";
 import { verticalAnimation } from "../../constants/animation";
 import Drawer from "../DrawerScreen";
 import {
@@ -58,7 +57,6 @@ const RootStackScreen = ({ userToken }) => (
           name="RequestBookScreen"
           component={RequestABookStackScreen}
         />
-        {/* <RootStack.Screen name="Camera" component={CameraComponent} /> */}
       </>
     ) : (
       <RootStack.Screen

@@ -14,7 +14,7 @@ export const BaseScreen = ({ navigation }) => {
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <View style={styles.UploadCard}>
         <Caption style={styles.StepText}>Step 1 of 3</Caption>
-        <Title>Add your book info</Title>
+        <Title>Find your ISBN</Title>
         <Caption style={styles.ModalFooter}>
           You can find the ISBN for your course books by going to My Schedule
           and Course Materials under Course Registration tab in my.olemiss.edu

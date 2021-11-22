@@ -1,6 +1,7 @@
 import React from "react";
 import { View, FlatList, SafeAreaView } from "react-native";
 import Card from "../../components/Card";
+import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import FloatingButton from "../../components/FloatingButton";
 import ScreenContainer from "../../components/ScreenContainer";
 
@@ -64,6 +65,13 @@ const books = [
 ];
 
 const RequestedScreen = ({ navigation }) => {
+  if (books.length == 0) {
+    return (
+      <EmptyListPlaceholder>
+        Currently, there aren't any requested books in the platform
+      </EmptyListPlaceholder>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScreenContainer>

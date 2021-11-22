@@ -1,6 +1,7 @@
 import React from "react";
 import { FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { ListCard } from "../../components/Card";
+import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import ScreenContainer from "../../components/ScreenContainer";
 
 const books = [
@@ -43,6 +44,13 @@ const books = [
 ];
 
 const SoldBooksScreen = ({ navigation }) => {
+  if (books.length == 0) {
+    return (
+      <EmptyListPlaceholder>
+        You haven't sold any books in the past yet
+      </EmptyListPlaceholder>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScreenContainer>
