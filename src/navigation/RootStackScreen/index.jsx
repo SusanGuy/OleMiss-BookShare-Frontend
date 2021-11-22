@@ -1,13 +1,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { horizontalAnimation } from "../../constants/animation";
+import CameraComponent from "../../components/Camera";
+import { verticalAnimation } from "../../constants/animation";
 import Drawer from "../DrawerScreen";
 import {
   AuthStackScreen,
   BookmarksStackScreen,
   ProfileStackScreen,
+  RequestABookStackScreen,
   RequestedBooksStackScreen,
+  SellBookStackScreen,
   SoldBooksStackScreen,
+  UploadABookStackScreen,
 } from "./StackScreens";
 
 const RootStack = createStackNavigator();
@@ -16,7 +20,7 @@ const RootStackScreen = ({ userToken }) => (
   <RootStack.Navigator
     screenOptions={{
       headerShown: false,
-      ...horizontalAnimation,
+      ...verticalAnimation,
     }}
   >
     {!userToken ? (
@@ -42,6 +46,19 @@ const RootStackScreen = ({ userToken }) => (
           name="RequestedBooksScreen"
           component={RequestedBooksStackScreen}
         />
+        <RootStack.Screen
+          name="UploadBookScreen"
+          component={UploadABookStackScreen}
+        />
+        <RootStack.Screen
+          name="SellBookScreen"
+          component={SellBookStackScreen}
+        />
+        <RootStack.Screen
+          name="RequestBookScreen"
+          component={RequestABookStackScreen}
+        />
+        {/* <RootStack.Screen name="Camera" component={CameraComponent} /> */}
       </>
     ) : (
       <RootStack.Screen

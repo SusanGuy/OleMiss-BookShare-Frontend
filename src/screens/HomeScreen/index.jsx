@@ -93,6 +93,7 @@ const HomeScreen = ({ navigation }) => {
         }}
       >
         <FloatingButton
+          onPress={() => navigation.navigate("UploadBookScreen")}
           color="#fafafa"
           backgroundColor="#3c91e6"
           iconName="add"

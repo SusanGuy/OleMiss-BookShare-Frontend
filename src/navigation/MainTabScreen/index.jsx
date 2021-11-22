@@ -32,12 +32,17 @@ const MainTabScreen = ({ navigation }) => {
         }}
       />
       <Tab.Screen
-        name="ProfileTab"
+        name="SellTab"
         component={FeedStackScreen}
         options={{
           tabBarLabel: "Sell",
           tabBarIcon: ({ color }) => (
-            <Icon name="ios-camera" color={color} size={26} />
+            <Icon
+              onPress={() => navigation.navigate("SellBookScreen")}
+              name="ios-camera"
+              color={color}
+              size={26}
+            />
           ),
         }}
       />

@@ -13,8 +13,28 @@ import {
   connectActionSheet,
   useActionSheet,
 } from "@expo/react-native-action-sheet";
+import CameraComponent from "../../components/Camera";
+import { showImagePicker } from "../../utils/imagePicker";
 
 const EditProfileScreen = ({ navigation }) => {
+  const [modalVisible, setModalVisable] = useState(false);
+  const [avatar, setAvatar] = useState(
+    "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180"
+  );
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const handleImageUpload = (image) => {
+    setAvatar(image);
+  };
+
+  const handleImageSelection = async () => {
+    const result = await showImagePicker();
+    if (!result.cancelled) {
+      setAvatar(result.uri);
+    }
+  };
+
   const { showActionSheetWithOptions } = useActionSheet();
   const options = ["Select photos", "Take a photo", "Cancel"];
   const onOpenActionSheet = () => {
@@ -25,19 +45,28 @@ const EditProfileScreen = ({ navigation }) => {
         destructiveButtonIndex: 2,
       },
       (buttonIndex) => {
-        alert(options[buttonIndex]);
+        if (buttonIndex == 0) {
+          handleImageSelection();
+        }
+        if (buttonIndex == 1) {
+          setModalVisable(true);
+        }
       }
     );
   };
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   return (
     <ScrollView style={{ flex: 1 }}>
       <StatusBar hidden={false} />
+      <CameraComponent
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisable}
+        handleImageUpload={handleImageUpload}
+      />
       <View style={styles.ImageContainer}>
         <Avatar.Image
           source={{
-            uri: "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+            uri: avatar,
           }}
           size={120}
         />
@@ -176,16 +205,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   SaveButton: {
-    width: "80%",
+    width: "95%",
     marginLeft: "auto",
     marginRight: "auto",
     marginTop: 25,
     marginBottom: 40,
     backgroundColor: "#000",
-    padding: 20,
+    padding: 15,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 40,
+    borderRadius: 8,
   },
   alignedText: { textAlign: "center", color: "#FFF", fontSize: 16 },
 });

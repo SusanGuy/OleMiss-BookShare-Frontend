@@ -86,6 +86,7 @@ const RequestedScreen = ({ navigation }) => {
           }}
         >
           <FloatingButton
+            onPress={() => navigation.navigate("RequestBookScreen")}
             color="#fff"
             backgroundColor="#3c91e6"
             iconName="add"

@@ -16,6 +16,18 @@ import {
   horizontalAnimation,
   verticalAnimation,
 } from "../../constants/animation";
+import {
+  BaseScreen as UploadBookBaseScreen,
+  SecondaryScreen as UploadBookSecondaryScreen,
+  CameraScreen as UploadBookFinalScreen,
+} from "../../screens/UploadABookScreen";
+
+import {
+  BaseScreen as RequestBookBaseScreen,
+  SecondaryScreen as RequestBookSecondaryScreen,
+  FinalScreen as RequestBookFinalScreen,
+} from "../../screens/RequestABookScreen";
+import BarCodeScannerScreen from "../../screens/BarCodeScannerScreen";
 
 const AuthStack = createStackNavigator();
 export const AuthStackScreen = () => (
@@ -138,8 +150,9 @@ export const RequestedBooksStackScreen = ({ navigation }) => (
     }}
   >
     <RequestedBooksStack.Screen
-      name="Requested Books"
+      name="RequestedBooks"
       options={{
+        title: "Requested Books",
         headerLeft: () => (
           <Icon.Button
             name="close"
@@ -165,8 +178,9 @@ export const SoldBooksStackScreen = ({ navigation }) => (
     }}
   >
     <SoldBooksStack.Screen
-      name="Sold Books"
+      name="SoldBooks"
       options={{
+        title: "Sold Books",
         headerLeft: () => (
           <Icon.Button
             name="close"
@@ -213,4 +227,134 @@ export const ProfileStackScreen = ({ navigation }) => (
       component={EditProfileScreen}
     />
   </ProfileStack.Navigator>
+);
+
+const UploadABookStack = createStackNavigator();
+export const UploadABookStackScreen = ({ navigation }) => (
+  <UploadABookStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+      ...horizontalAnimation,
+    }}
+  >
+    <UploadABookStack.Screen
+      name="UploadBookBaseScreen"
+      options={{
+        title: "Upload A Book",
+        headerShown: true,
+        headerLeft: () => (
+          <Icon.Button
+            name="close"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.pop()}
+          ></Icon.Button>
+        ),
+      }}
+      component={UploadBookBaseScreen}
+    />
+    <UploadABookStack.Screen
+      name="UploadBookSecondaryScreen"
+      options={{
+        title: "More Info",
+        headerShown: true,
+      }}
+      component={UploadBookSecondaryScreen}
+    />
+    <UploadABookStack.Screen
+      name="UploadBookFinalScreen"
+      options={{
+        title: "Finish",
+        headerShown: true,
+      }}
+      component={UploadBookFinalScreen}
+    />
+  </UploadABookStack.Navigator>
+);
+
+const RequestABookStack = createStackNavigator();
+export const RequestABookStackScreen = ({ navigation }) => (
+  <RequestABookStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+      ...horizontalAnimation,
+    }}
+  >
+    <RequestABookStack.Screen
+      name="RequestBookBaseScreen"
+      options={{
+        title: "Request A Book",
+        headerShown: true,
+        headerLeft: () => (
+          <Icon.Button
+            name="close"
+            size={25}
+            color="#000"
+            backgroundColor="#fff"
+            onPress={() => navigation.pop()}
+          ></Icon.Button>
+        ),
+      }}
+      component={RequestBookBaseScreen}
+    />
+    <RequestABookStack.Screen
+      name="RequestBookSecondaryScreen"
+      options={{
+        title: "More Info",
+        headerShown: true,
+      }}
+      component={RequestBookSecondaryScreen}
+    />
+    <RequestABookStack.Screen
+      name="RequestBookFinalScreen"
+      options={{
+        title: "Finish",
+        headerShown: true,
+      }}
+      component={RequestBookFinalScreen}
+    />
+  </RequestABookStack.Navigator>
+);
+
+const SellBookStack = createStackNavigator();
+export const SellBookStackScreen = ({ navigation }) => (
+  <SellBookStack.Navigator
+    screenOptions={{
+      headerBackTitleVisible: false,
+      ...horizontalAnimation,
+    }}
+  >
+    <SellBookStack.Screen
+      name="BarCodeScannerScreen"
+      options={{
+        headerShown: false,
+      }}
+      component={BarCodeScannerScreen}
+    />
+    <SellBookStack.Screen
+      name="UploadBookBaseScreen"
+      options={{
+        title: "Upload A Book",
+        headerShown: true,
+      }}
+      component={UploadBookBaseScreen}
+    />
+    <SellBookStack.Screen
+      name="UploadBookSecondaryScreen"
+      options={{
+        title: "More Info",
+        headerShown: true,
+      }}
+      component={UploadBookSecondaryScreen}
+    />
+    <SellBookStack.Screen
+      name="UploadBookFinalScreen"
+      options={{
+        title: "Finish",
+        headerShown: true,
+      }}
+      component={UploadBookFinalScreen}
+    />
+  </SellBookStack.Navigator>
 );
