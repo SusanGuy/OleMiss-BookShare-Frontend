@@ -1,27 +1,40 @@
-import React, { useState, useRef, useContext } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 import { Caption, Headline, Subheading } from "react-native-paper";
-import { AuthContext } from "../../../context";
 import ScreenContainer from "../../components/ScreenContainer";
+import { useDispatch, useSelector } from "react-redux";
+import { login, clearErrors } from "../../redux/actions/auth";
 
 const SigninScreen = ({ navigation }) => {
-  const { signIn } = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [state, setState] = useState({
     email: "",
     password: "",
-    errMsg: "",
   });
+  const authLoading = useSelector((state) => state.auth.authLoading);
+  const error = useSelector((state) => state.auth.error);
+
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+    }
+  }, []);
+
   const { email, password } = state;
   const validateInput = useRef();
 
   const onLogin = () => {
-    if (state.email == "ssubedi1@go.olemiss.edu" && state.password == "12345") {
-      signIn();
-    } else {
+    dispatch(login(email, password));
+    if (error) {
       validateInput.current.shake(800);
-      setState({ ...state, errMsg: "Invalid login details. Try again!" });
     }
   };
   return (
@@ -33,57 +46,79 @@ const SigninScreen = ({ navigation }) => {
         <Animatable.View ref={validateInput}>
           <TextInput
             value={email}
-            style={styles.input}
+            style={[styles.input, error?.emailError && styles.borderError]}
             placeholder="Email"
+            onFocus={() => {
+              if (error?.error || error?.emailError) {
+                dispatch(clearErrors());
+              }
+            }}
             keyboardType="email-address"
             returnKeyType="next"
             onChangeText={(text) => {
-              setState({ ...state, errMsg: "" });
               setState({ ...state, email: text });
             }}
           />
+          {error?.emailError && (
+            <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              {error?.emailError}
+            </Text>
+          )}
 
           <TextInput
             value={password}
-            style={styles.input}
+            style={[styles.input, error?.passwordError && styles.borderError]}
             placeholder="Password"
+            onFocus={() => {
+              if (error?.error || error?.passwordError) {
+                dispatch(clearErrors());
+              }
+            }}
             returnKeyType="done"
             secureTextEntry={true}
             onChangeText={(text) => {
-              setState({ ...state, errMsg: "" });
               setState({ ...state, password: text });
             }}
           />
-          <Text style={styles.error}>{state.errMsg}</Text>
-        </Animatable.View>
+          {error?.passwordError && (
+            <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              {error?.passwordError}
+            </Text>
+          )}
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => onLogin()}
-            style={styles.loginButton}
-          >
-            <Caption style={styles.alignedText}>Login Now</Caption>
-          </TouchableOpacity>
-
-          <Subheading style={{ marginTop: 50 }}>Forgot Password ?</Subheading>
-
-          <View style={styles.flexContainer}>
-            <Subheading style={{ color: "gray" }}>
-              Don't have an account?
-            </Subheading>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Auth", {
-                  screen: "CreateAccountScreen",
-                })
-              }
+              onPress={() => onLogin()}
+              style={styles.loginButton}
             >
-              <Subheading style={{ fontWeight: "bold", marginLeft: 2 }}>
-                Sign Up
-              </Subheading>
+              {!authLoading ? (
+                <Caption style={styles.alignedText}>Login Now</Caption>
+              ) : (
+                <ActivityIndicator color="#fff" />
+              )}
             </TouchableOpacity>
+            {error?.error && <Text style={styles.error}>{error?.error}</Text>}
+
+            <Subheading style={{ marginTop: 50 }}>Forgot Password ?</Subheading>
+
+            <View style={styles.flexContainer}>
+              <Subheading style={{ color: "gray" }}>
+                Don't have an account?
+              </Subheading>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Auth", {
+                    screen: "CreateAccountScreen",
+                  })
+                }
+              >
+                <Subheading style={{ fontWeight: "bold", marginLeft: 2 }}>
+                  Sign Up
+                </Subheading>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        </Animatable.View>
       </ScreenContainer>
     </SafeAreaView>
   );
@@ -127,8 +162,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   error: {
-    textAlign: "center",
     marginTop: 10,
     color: "red",
+  },
+  borderError: {
+    borderBottomColor: "red",
+    borderBottomWidth: 1,
   },
 });

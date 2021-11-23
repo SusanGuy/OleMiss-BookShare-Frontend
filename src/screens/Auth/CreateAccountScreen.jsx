@@ -1,36 +1,60 @@
-import React, { useState, useRef, useContext } from "react";
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
 import { Caption, Headline, Subheading } from "react-native-paper";
 import ScreenContainer from "../../components/ScreenContainer";
-import { AuthContext } from "../../../context";
+import { useDispatch, useSelector } from "react-redux";
+import { signup, clearErrors } from "../../redux/actions/auth";
+import CustomPicker from "../../components/CustomPicker";
+
+const options = ["Freshmen", "Sophmore", "Junior", "Senior"];
 
 const CreateAccountScreen = ({ navigation }) => {
-  const { signIn } = useContext(AuthContext);
+  const authLoading = useSelector((state) => state.auth.authLoading);
+  const error = useSelector((state) => state.auth.error);
+  const [modalVisible, setModalVisible] = useState(false);
+  const dispatch = useDispatch();
   const [state, setState] = useState({
+    name: "",
     email: "",
     password: "",
-    phone: "",
-    errMsg: "",
-    classification: "",
+    contact_number: "",
     major: "",
   });
+  const [classification, setClassification] = useState(options[0]);
 
-  const { email, password, phone, classification, major } = state;
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+    }
+  }, []);
 
+  const { name, email, password, contact_number, major } = state;
   const validateInput = useRef();
 
-  const onLogin = () => {
-    if (state.email == "susan" && state.password == "12345") {
-      signIn();
-    } else {
+  const onSignup = () => {
+    dispatch(
+      signup(name, email, password, contact_number, classification, major)
+    );
+    if (error) {
       validateInput.current.shake(800);
-      setState({ ...state, errMsg: "Invalid login details. Try again!" });
     }
   };
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff", flex: 1 }}>
+    <SafeAreaView
+      style={{
+        backgroundColor: modalVisible ? "rgba(255,255,255,0.1)" : "#fff",
+        flex: 1,
+      }}
+    >
       <ScrollView>
         <ScreenContainer>
           <Headline style={styles.header}>New here? </Headline>
@@ -40,82 +64,143 @@ const CreateAccountScreen = ({ navigation }) => {
 
           <Animatable.View ref={validateInput}>
             <TextInput
-              style={styles.input}
+              placeholder="Name"
+              style={[styles.input, error?.nameError && styles.borderError]}
+              value={name}
+              returnKeyType="next"
+              onFocus={() => {
+                if (error?.error || error?.nameError) {
+                  dispatch(clearErrors());
+                }
+              }}
+              onChangeText={(text) => {
+                setState({ ...state, name: text });
+              }}
+            />
+            {error?.nameError && (
+              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+                {error?.nameError}
+              </Text>
+            )}
+            <TextInput
               placeholder="Email"
               value={email}
+              style={[styles.input, error?.emailError && styles.borderError]}
               keyboardType="email-address"
+              onFocus={() => {
+                if (error?.error || error?.emailError) {
+                  dispatch(clearErrors());
+                }
+              }}
               returnKeyType="next"
               onChangeText={(text) => {
-                setState({ ...state, errMsg: "", email: text });
+                setState({ ...state, email: text });
               }}
             />
-
+            {error?.emailError && (
+              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+                {error?.emailError}
+              </Text>
+            )}
             <TextInput
-              style={styles.input}
               placeholder="Password"
               value={password}
+              style={[styles.input, error?.passwordError && styles.borderError]}
               secureTextEntry={true}
+              onFocus={() => {
+                if (error?.error || error?.passwordError) {
+                  dispatch(clearErrors());
+                }
+              }}
               returnKeyType="next"
               onChangeText={(text) => {
-                setState({ ...state, errMsg: "", password: text });
+                setState({ ...state, password: text });
               }}
             />
+            {error?.passwordError && (
+              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+                {error?.passwordError}
+              </Text>
+            )}
             <TextInput
               style={styles.input}
               placeholder="Phone Number"
               keyboardType="phone-pad"
-              value={phone}
+              value={contact_number}
               returnKeyType="next"
               onChangeText={(text) => {
-                setState({ ...state, errMsg: "", password: text });
+                setState({ ...state, contact_number: text });
               }}
             />
             <TextInput
               style={styles.input}
               placeholder="Classification"
               value={classification}
+              editable={false}
+              selectTextOnFocus={false}
               returnKeyType="next"
-              onChangeText={(text) => {
-                setState({ ...state, errMsg: "", classification: text });
+              onPressIn={() => {
+                setModalVisible(true);
               }}
             />
+            {modalVisible && (
+              <CustomPicker
+                options={options}
+                value={classification}
+                setValue={setClassification}
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+              />
+            )}
             <TextInput
-              style={styles.input}
+              style={[styles.input, error?.majorError && styles.borderError]}
               placeholder="Major"
               value={major}
               returnKeyType="done"
+              onFocus={() => {
+                if (error?.error || error?.majorError) {
+                  dispatch(clearErrors());
+                }
+              }}
               onChangeText={(text) => {
-                setState({ ...state, errMsg: "", major: text });
+                setState({ ...state, major: text });
               }}
             />
-            <Text style={styles.error}>{state.errMsg}</Text>
-          </Animatable.View>
-
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => onLogin()}
-              style={styles.loginButton}
-            >
-              <Caption style={styles.alignedText}>Sign Up</Caption>
-            </TouchableOpacity>
-
-            <View style={styles.flexContainer}>
-              <Subheading style={{ color: "gray" }}>
-                Already have an account?
-              </Subheading>
+            {error?.majorError && (
+              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+                {error?.majorError}
+              </Text>
+            )}
+            <View style={styles.buttonContainer}>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Auth", {
-                    screen: "SignInScreen",
-                  })
-                }
+                onPress={() => onSignup()}
+                style={styles.loginButton}
               >
-                <Subheading style={{ fontWeight: "bold", marginLeft: 2 }}>
-                  Sign In
-                </Subheading>
+                {!authLoading ? (
+                  <Caption style={styles.alignedText}>Sign Up</Caption>
+                ) : (
+                  <ActivityIndicator color="#fff" />
+                )}
               </TouchableOpacity>
+              {error?.error && <Text style={styles.error}>{error?.error}</Text>}
+              <View style={styles.flexContainer}>
+                <Subheading style={{ color: "gray" }}>
+                  Already have an account?
+                </Subheading>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Auth", {
+                      screen: "SignInScreen",
+                    })
+                  }
+                >
+                  <Subheading style={{ fontWeight: "bold", marginLeft: 2 }}>
+                    Sign In
+                  </Subheading>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
+          </Animatable.View>
         </ScreenContainer>
       </ScrollView>
     </SafeAreaView>
@@ -160,8 +245,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   error: {
-    textAlign: "center",
     marginTop: 10,
     color: "red",
+  },
+  borderError: {
+    borderBottomColor: "red",
+    borderBottomWidth: 1,
   },
 });

@@ -22,7 +22,7 @@ const RootStackScreen = ({ userToken }) => (
       ...verticalAnimation,
     }}
   >
-    {!userToken ? (
+    {userToken ? (
       <>
         <RootStack.Screen
           name="App"

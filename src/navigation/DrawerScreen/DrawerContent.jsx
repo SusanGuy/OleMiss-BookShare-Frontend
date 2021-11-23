@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Title, Caption, Drawer } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
-import { AuthContext } from "../../../context";
+import { useDispatch, useSelector } from "react-redux";
+import { signout } from "../../redux/actions/auth";
 
 export const DrawerContent = (props) => {
-  const { signOut } = useContext(AuthContext);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   return (
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -15,13 +17,18 @@ export const DrawerContent = (props) => {
             <View style={{ flexDirection: "row", marginTop: 15 }}>
               <Avatar.Image
                 source={{
-                  uri: "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+                  uri:
+                    user && user.avatar
+                      ? user.avatar
+                      : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
                 }}
                 size={50}
               />
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                <Title style={styles.title}>Susan Subedi</Title>
-                <Caption style={styles.caption}>@ssubedi1</Caption>
+                <Title style={styles.title}>{user && user.name}</Title>
+                <Caption style={styles.caption}>
+                  @{user && user.email.split("@")[0]}
+                </Caption>
               </View>
             </View>
           </View>
@@ -76,7 +83,7 @@ export const DrawerContent = (props) => {
         <CustomDrawerItem
           iconName="log-out-sharp"
           label="Sign Out"
-          onPress={() => signOut()}
+          onPress={() => dispatch(signout())}
         />
       </Drawer.Section>
     </View>
