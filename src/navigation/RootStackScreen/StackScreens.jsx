@@ -19,7 +19,8 @@ import {
 import {
   BaseScreen as UploadBookBaseScreen,
   SecondaryScreen as UploadBookSecondaryScreen,
-  CameraScreen as UploadBookFinalScreen,
+  FinalScreen as UploadBookFinalScreen,
+  CameraScreen as UploadBookCameraScreen,
 } from "../../screens/UploadABookScreen";
 
 import {
@@ -257,7 +258,7 @@ export const UploadABookStackScreen = ({ navigation }) => (
     <UploadABookStack.Screen
       name="UploadBookSecondaryScreen"
       options={{
-        title: "More Info",
+        title: "Book Info",
         headerShown: true,
       }}
       component={UploadBookSecondaryScreen}
@@ -265,10 +266,18 @@ export const UploadABookStackScreen = ({ navigation }) => (
     <UploadABookStack.Screen
       name="UploadBookFinalScreen"
       options={{
-        title: "Finish",
+        title: "More Info",
         headerShown: true,
       }}
       component={UploadBookFinalScreen}
+    />
+    <UploadABookStack.Screen
+      name="UploadBookCameraScreen"
+      options={{
+        title: "Finish",
+        headerShown: true,
+      }}
+      component={UploadBookCameraScreen}
     />
   </UploadABookStack.Navigator>
 );
@@ -301,7 +310,7 @@ export const RequestABookStackScreen = ({ navigation }) => (
     <RequestABookStack.Screen
       name="RequestBookSecondaryScreen"
       options={{
-        title: "More Info",
+        title: "Book Info",
         headerShown: true,
       }}
       component={RequestBookSecondaryScreen}
@@ -343,7 +352,7 @@ export const SellBookStackScreen = ({ navigation }) => (
     <SellBookStack.Screen
       name="UploadBookSecondaryScreen"
       options={{
-        title: "More Info",
+        title: "Book Info",
         headerShown: true,
       }}
       component={UploadBookSecondaryScreen}
@@ -351,10 +360,18 @@ export const SellBookStackScreen = ({ navigation }) => (
     <SellBookStack.Screen
       name="UploadBookFinalScreen"
       options={{
-        title: "Finish",
+        title: "More Info",
         headerShown: true,
       }}
       component={UploadBookFinalScreen}
+    />
+    <SellBookStack.Screen
+      name="UploadBookCameraScreen"
+      options={{
+        title: "More Info",
+        headerShown: true,
+      }}
+      component={UploadBookCameraScreen}
     />
   </SellBookStack.Navigator>
 );

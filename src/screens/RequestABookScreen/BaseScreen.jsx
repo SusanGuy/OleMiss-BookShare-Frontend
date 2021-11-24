@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
@@ -8,8 +8,55 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
+import { searchBookByISBN } from "../../utils/searchByIsbn";
 
 export const BaseScreen = ({ navigation }) => {
+  const [state, setState] = useState({
+    isbn: "",
+    error: {},
+  });
+  const { isbn, error } = state;
+
+  const validateInput = () => {
+    const validationErrors = {};
+    if (isbn === "") {
+      validationErrors.isbnError = "Isbn is required!";
+    } else {
+      if (!isbn.match(/^[0-9]+$/)) {
+        validationErrors.isbnError = "Isbn must be all numbers!";
+      }
+      if (isbn.length !== 10 && isbn.length !== 13) {
+        validationErrors.isbnError = "Isbn can only be 10 or 13 digits long!";
+      }
+    }
+
+    setState({ ...state, error: validationErrors });
+    return Object.keys(validationErrors).length < 1;
+  };
+
+  const onFormSubmit = async () => {
+    const isValid = validateInput();
+    if (!isValid) {
+      validateInputRef.current.shake(800);
+    } else {
+      setState({ ...state, error: {} });
+      let bookState = { isbn };
+      const data = await searchBookByISBN(isbn);
+
+      if (data) {
+        bookState = {
+          ...bookState,
+          ...data,
+        };
+      }
+      navigation.push("RequestBookSecondaryScreen", {
+        bookState,
+      });
+    }
+  };
+
+  const validateInputRef = useRef();
+
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <View style={styles.UploadCard}>
@@ -20,7 +67,7 @@ export const BaseScreen = ({ navigation }) => {
           and Course Materials under Course Registration tab in my.olemiss.edu
         </Caption>
       </View>
-      <Animatable.View style={styles.FormContainer}>
+      <Animatable.View ref={validateInputRef} style={styles.FormContainer}>
         <View>
           <Title
             style={{
@@ -31,17 +78,34 @@ export const BaseScreen = ({ navigation }) => {
             What is the ISBN?(ISBN9/ISBN13)
           </Title>
           <TextInput
-            value={"9781118968086"}
             keyboardType="numeric"
             returnKeyType="done"
-            style={styles.Input}
+            onFocus={() => {
+              if (error?.isbnError) {
+                delete error["isbnError"];
+                setState({ ...state, error });
+              }
+            }}
+            style={[styles.Input, error?.isbnError && styles.borderError]}
+            value={isbn}
+            onChangeText={(text) => {
+              setState({ ...state, isbn: text });
+            }}
           />
+          {error?.isbnError && (
+            <Caption
+              style={{
+                ...styles.error,
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              {error?.isbnError}
+            </Caption>
+          )}
         </View>
       </Animatable.View>
-      <TouchableOpacity
-        onPress={() => navigation.push("RequestBookSecondaryScreen")}
-        style={styles.SaveButton}
-      >
+      <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
         <Caption style={styles.alignedText}>Continue</Caption>
       </TouchableOpacity>
     </ScrollView>

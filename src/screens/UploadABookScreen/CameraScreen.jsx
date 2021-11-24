@@ -60,6 +60,7 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
       setError(true);
       validateInputRef.current.shake(800);
     } else {
+      console.log(route?.params?.bookState);
       setError(false);
     }
   };
@@ -74,7 +75,7 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
         handleImageUpload={handleImageUpload}
       />
       <View style={styles.UploadCard}>
-        <Caption style={styles.StepText}>Step 3 of 3</Caption>
+        <Caption style={styles.StepText}>Step 4 of 4</Caption>
         <Title stule={styles.ModalHeader}>Time to take a picture 📷</Title>
         <Caption stule={styles.ModalFooter}>
           You are allowed to upload a max of 2 images. Make sure to take picture

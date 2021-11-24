@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
@@ -8,23 +8,14 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
+import { searchBookByISBN } from "../../utils/searchByIsbn";
 
-export const BaseScreen = ({ route, navigation }) => {
+export const BaseScreen = ({ navigation }) => {
   const [state, setState] = useState({
     isbn: "",
-    title: "",
-    edition: "",
-    authors: "",
     error: {},
   });
-
-  useEffect(() => {
-    if (route?.params?.isbn) {
-      setState({ ...state, isbn: state.params.isbn });
-    }
-  }, []);
-
-  const { isbn, title, edition, authors, error } = state;
+  const { isbn, error } = state;
 
   const validateInput = () => {
     const validationErrors = {};
@@ -34,34 +25,33 @@ export const BaseScreen = ({ route, navigation }) => {
       if (!isbn.match(/^[0-9]+$/)) {
         validationErrors.isbnError = "Isbn must be all numbers!";
       }
-      if (isbn.length !== 9 && isbn.length !== 13) {
-        validationErrors.isbnError = "Isbn can only be 9 or 13 digits long!";
+      if (isbn.length !== 10 && isbn.length !== 13) {
+        validationErrors.isbnError = "Isbn can only be 10 or 13 digits long!";
       }
     }
-    if (title === "") {
-      validationErrors.titleError = "Title is required!";
-    }
-    if (edition === "") {
-      validationErrors.editionError = "Edition is required!";
-    }
-    if (authors === "") {
-      validationErrors.authorsError = "Authors is required!";
-    }
+
     setState({ ...state, error: validationErrors });
     return Object.keys(validationErrors).length < 1;
   };
 
   const validateInputRef = useRef();
-  console.log(state);
 
-  const onFormSubmit = () => {
+  const onFormSubmit = async () => {
     const isValid = validateInput();
     if (!isValid) {
       validateInputRef.current.shake(800);
     } else {
       setState({ ...state, error: {} });
+      let bookState = { isbn };
+      const data = await searchBookByISBN(isbn);
+      if (data) {
+        bookState = {
+          ...bookState,
+          ...data,
+        };
+      }
       navigation.push("UploadBookSecondaryScreen", {
-        bookState: { isbn, title, edition, authors },
+        bookState,
       });
     }
   };
@@ -69,18 +59,24 @@ export const BaseScreen = ({ route, navigation }) => {
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <View style={styles.UploadCard}>
-        <Caption style={styles.StepText}>Step 1 of 3</Caption>
-        <Title>Add your book info</Title>
+        <Caption style={styles.StepText}>Step 1 of 4</Caption>
+        <Title>Find your ISBN</Title>
         <Caption style={styles.ModalFooter}>
           Don't worry, once you enter the ISBN we will try to find the book for
           you!
         </Caption>
       </View>
-      <Animatable.View ref={validateInputRef}>
+      <Animatable.View ref={validateInputRef} style={styles.FormContainer}>
         <View>
-          <Caption style={styles.Label}>ISBN9/ISBN13</Caption>
+          <Title
+            style={{
+              marginHorizontal: 20,
+              fontSize: 20,
+            }}
+          >
+            What is the ISBN?(ISBN9/ISBN13)
+          </Title>
           <TextInput
-            value={isbn && isbn[1] ? isbn[1] : "91381311313131"}
             keyboardType="numeric"
             returnKeyType="done"
             onFocus={() => {
@@ -96,76 +92,18 @@ export const BaseScreen = ({ route, navigation }) => {
             }}
           />
           {error?.isbnError && (
-            <Caption style={styles.error}>{error?.isbnError}</Caption>
-          )}
-        </View>
-
-        <View>
-          <Caption style={styles.Label}>Title</Caption>
-          <TextInput
-            value={"Fundamentals of Computer Security"}
-            style={[styles.Input, error?.titleError && styles.borderError]}
-            returnKeyType="done"
-            value={title}
-            onChangeText={(text) => {
-              setState({ ...state, title: text });
-            }}
-            onFocus={() => {
-              if (error?.titleError) {
-                delete error["titleError"];
-                setState({ ...state, error });
-              }
-            }}
-          />
-          {error?.titleError && (
-            <Caption style={styles.error}>{error?.titleError}</Caption>
-          )}
-        </View>
-        <View>
-          <Caption style={styles.Label}>Edition</Caption>
-          <TextInput
-            style={[styles.Input, error?.editionError && styles.borderError]}
-            value={"2"}
-            returnKeyType="done"
-            value={edition}
-            onChangeText={(text) => {
-              setState({ ...state, edition: text });
-            }}
-            onFocus={() => {
-              if (error?.editionError) {
-                delete error["editionError"];
-                setState({ ...state, error });
-              }
-            }}
-          />
-          {error?.editionError && (
-            <Caption style={styles.error}>{error?.editionError}</Caption>
-          )}
-        </View>
-        <View>
-          <Caption style={styles.Label}>
-            Authors (enter names seperated by comma)
-          </Caption>
-          <TextInput
-            style={[styles.Input, error?.authorsError && styles.borderError]}
-            value={authors}
-            returnKeyType="done"
-            onChangeText={(text) => {
-              setState({ ...state, authors: text });
-            }}
-            onFocus={() => {
-              if (error?.authorsError) {
-                delete error["authorsError"];
-                setState({ ...state, error });
-              }
-            }}
-          />
-          {error?.authorsError && (
-            <Caption style={styles.error}>{error?.authorsError}</Caption>
+            <Caption
+              style={{
+                ...styles.error,
+                textAlign: "center",
+                justifyContent: "center",
+              }}
+            >
+              {error?.isbnError}
+            </Caption>
           )}
         </View>
       </Animatable.View>
-
       <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
         <Caption style={styles.alignedText}>Continue</Caption>
       </TouchableOpacity>

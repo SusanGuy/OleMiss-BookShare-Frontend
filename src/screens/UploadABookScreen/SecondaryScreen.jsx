@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
@@ -8,49 +8,34 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
-import CustomPicker from "../../components/CustomPicker";
-
-const options = ["USED", "NEW"];
 
 export const SecondaryScreen = ({ route, navigation }) => {
   const [state, setState] = useState({
-    amount: "0",
-    course_name: "",
-    course_code: "",
+    title: "",
+    edition: "",
+    authors: "",
     error: {},
   });
-  const [condition, setCondition] = useState(options[0]);
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const { amount, course_name, course_code, error } = state;
+  const { title, edition, authors, error } = state;
 
   const validateInput = () => {
     const validationErrors = {};
-    if (amount === "") {
-      validationErrors.amountError = "Price is required!";
-    } else {
-      const valid = /^-?\d*(\.\d+)?$/;
-      if (!amount.match(valid)) {
-        validationErrors.amountError = "Price must be a decimal value!";
-      }
-    }
-    if (course_name === "") {
-      validationErrors.courseNameError = "Course Name is required!";
-    }
-    if (course_code === "") {
-      validationErrors.courseCodeError = "Course Code is required!";
-    } else {
-      if (!course_code.match(/^[0-9]+$/)) {
-        validationErrors.courseCodeError = "Course Code must be all numbers!";
-      }
-    }
 
+    if (title === "") {
+      validationErrors.titleError = "Title is required!";
+    }
+    if (edition === "") {
+      validationErrors.editionError = "Edition is required!";
+    }
+    if (authors === "") {
+      validationErrors.authorsError = "Authors is required!";
+    }
     setState({ ...state, error: validationErrors });
     return Object.keys(validationErrors).length < 1;
   };
 
   const validateInputRef = useRef();
-
 
   const onFormSubmit = () => {
     const isValid = validateInput();
@@ -59,111 +44,93 @@ export const SecondaryScreen = ({ route, navigation }) => {
     } else {
       setState({ ...state, error: {} });
       navigation.push("UploadBookFinalScreen", {
-        bookState: {
-          ...route?.params?.bookState,
-          amount,
-          course_name,
-          course_code,
-        },
+        bookState: { ...route?.params?.bookState, title, edition, authors },
       });
     }
   };
 
+  useEffect(() => {
+    if (route?.params) {
+      setState({
+        ...state,
+        ...route?.params,
+      });
+    }
+  }, []);
+
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <View style={styles.UploadCard}>
-        <Caption style={styles.StepText}>Step 2 of 3</Caption>
-        <Title stule={styles.ModalHeader}>Give us more info</Title>
-        <Caption stule={styles.ModalFooter}>
-          Leave the price at $0 if you want to giveaway the book for free
-        </Caption>
+        <Caption style={styles.StepText}>Step 2 of 4</Caption>
+        <Title>Add your book info</Title>
+        <Caption style={styles.ModalFooter}></Caption>
       </View>
       <Animatable.View ref={validateInputRef}>
         <View>
-          <Caption style={styles.Label}>Price</Caption>
+          <Caption style={styles.Label}>Title</Caption>
           <TextInput
-            value={amount}
-            keyboardType="numeric"
+            value={"Fundamentals of Computer Security"}
+            style={[styles.Input, error?.titleError && styles.borderError]}
             returnKeyType="done"
+            value={title}
+            onChangeText={(text) => {
+              setState({ ...state, title: text });
+            }}
             onFocus={() => {
-              if (error?.amountError) {
-                delete error["amountError"];
+              if (error?.titleError) {
+                delete error["titleError"];
                 setState({ ...state, error });
               }
             }}
-            style={[styles.Input, error?.amountError && styles.borderError]}
-            onChangeText={(text) => {
-              setState({ ...state, amount: text });
-            }}
           />
-          {error?.amountError && (
-            <Caption style={styles.error}>{error?.amountError}</Caption>
+          {error?.titleError && (
+            <Caption style={styles.error}>{error?.titleError}</Caption>
           )}
         </View>
         <View>
-          <Caption style={styles.Label}>For Course (Name)</Caption>
+          <Caption style={styles.Label}>Edition</Caption>
           <TextInput
-            value={course_name}
+            style={[styles.Input, error?.editionError && styles.borderError]}
+            value={"2"}
             returnKeyType="done"
+            value={edition}
+            onChangeText={(text) => {
+              setState({ ...state, edition: text });
+            }}
             onFocus={() => {
-              if (error?.courseNameError) {
-                delete error["courseNameError"];
+              if (error?.editionError) {
+                delete error["editionError"];
                 setState({ ...state, error });
               }
             }}
-            style={[styles.Input, error?.courseNameError && styles.borderError]}
-            onChangeText={(text) => {
-              setState({ ...state, course_name: text });
-            }}
           />
-          {error?.courseNameError && (
-            <Caption style={styles.error}>{error?.courseNameError}</Caption>
+          {error?.editionError && (
+            <Caption style={styles.error}>{error?.editionError}</Caption>
           )}
         </View>
         <View>
-          <Caption style={styles.Label}>For Course (Code)</Caption>
+          <Caption style={styles.Label}>
+            Authors (enter names seperated by comma)
+          </Caption>
           <TextInput
-            value={course_code}
-            keyboardType="numeric"
+            style={[styles.Input, error?.authorsError && styles.borderError]}
+            value={authors}
             returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, authors: text });
+            }}
             onFocus={() => {
-              if (error?.courseCodeError) {
-                delete error["courseCodeError"];
+              if (error?.authorsError) {
+                delete error["authorsError"];
                 setState({ ...state, error });
               }
             }}
-            style={[styles.Input, error?.courseCodeError && styles.borderError]}
-            onChangeText={(text) => {
-              setState({ ...state, course_code: text });
-            }}
           />
-          {error?.courseCodeError && (
-            <Caption style={styles.error}>{error?.courseCodeError}</Caption>
+          {error?.authorsError && (
+            <Caption style={styles.error}>{error?.authorsError}</Caption>
           )}
-        </View>
-        <View>
-          <Caption style={styles.Label}>Condition</Caption>
-          <TextInput
-            style={styles.Input}
-            value={condition}
-            editable={false}
-            selectTextOnFocus={false}
-            returnKeyType="done"
-            onPressIn={() => {
-              setModalVisible(true);
-            }}
-          />
         </View>
       </Animatable.View>
-      {modalVisible && (
-        <CustomPicker
-          options={options}
-          value={condition}
-          setValue={setCondition}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
-      )}
       <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
         <Caption style={styles.alignedText}>Continue</Caption>
       </TouchableOpacity>

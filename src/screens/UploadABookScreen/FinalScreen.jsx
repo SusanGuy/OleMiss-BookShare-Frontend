@@ -8,18 +8,32 @@ import {
   TouchableOpacity,
 } from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
+import CustomPicker from "../../components/CustomPicker";
+
+const options = ["USED", "NEW"];
 
 export const FinalScreen = ({ route, navigation }) => {
   const [state, setState] = useState({
+    amount: "0",
     course_name: "",
     course_code: "",
     error: {},
   });
+  const [condition, setCondition] = useState(options[0]);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const { amount, course_name, course_code, error } = state;
 
   const validateInput = () => {
     const validationErrors = {};
-
+    if (amount === "") {
+      validationErrors.amountError = "Price is required!";
+    } else {
+      const valid = /^-?\d*(\.\d+)?$/;
+      if (!amount.match(valid)) {
+        validationErrors.amountError = "Price must be a decimal value!";
+      }
+    }
     if (course_name === "") {
       validationErrors.courseNameError = "Course Name is required!";
     }
@@ -43,19 +57,48 @@ export const FinalScreen = ({ route, navigation }) => {
       validateInputRef.current.shake(800);
     } else {
       setState({ ...state, error: {} });
-      console.log(route?.params?.bookState);
+      navigation.push("UploadBookCameraScreen", {
+        bookState: {
+          ...route?.params?.bookState,
+          amount,
+          course_name,
+          course_code,
+        },
+      });
     }
   };
+
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <View style={styles.UploadCard}>
-        <Caption style={styles.StepText}>Step 3 of 3</Caption>
+        <Caption style={styles.StepText}>Step 3 of 4</Caption>
         <Title stule={styles.ModalHeader}>Give us more info</Title>
         <Caption stule={styles.ModalFooter}>
-          Examples of a Course Name and Code is CSCI 345, ECON 202 etc
+          Leave the price at $0 if you want to giveaway the book for free
         </Caption>
       </View>
       <Animatable.View ref={validateInputRef}>
+        <View>
+          <Caption style={styles.Label}>Price</Caption>
+          <TextInput
+            value={amount}
+            keyboardType="numeric"
+            returnKeyType="done"
+            onFocus={() => {
+              if (error?.amountError) {
+                delete error["amountError"];
+                setState({ ...state, error });
+              }
+            }}
+            style={[styles.Input, error?.amountError && styles.borderError]}
+            onChangeText={(text) => {
+              setState({ ...state, amount: text });
+            }}
+          />
+          {error?.amountError && (
+            <Caption style={styles.error}>{error?.amountError}</Caption>
+          )}
+        </View>
         <View>
           <Caption style={styles.Label}>For Course (Name)</Caption>
           <TextInput
@@ -97,9 +140,31 @@ export const FinalScreen = ({ route, navigation }) => {
             <Caption style={styles.error}>{error?.courseCodeError}</Caption>
           )}
         </View>
+        <View>
+          <Caption style={styles.Label}>Condition</Caption>
+          <TextInput
+            style={styles.Input}
+            value={condition}
+            editable={false}
+            selectTextOnFocus={false}
+            returnKeyType="done"
+            onPressIn={() => {
+              setModalVisible(true);
+            }}
+          />
+        </View>
       </Animatable.View>
+      {modalVisible && (
+        <CustomPicker
+          options={options}
+          value={condition}
+          setValue={setCondition}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
       <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
-        <Caption style={styles.alignedText}>Request</Caption>
+        <Caption style={styles.alignedText}>Continue</Caption>
       </TouchableOpacity>
     </ScrollView>
   );
