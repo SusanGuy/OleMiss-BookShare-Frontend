@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Image, View, TouchableOpacity } from "react-native";
 import { Caption, Title } from "react-native-paper";
 import { ScrollView } from "react-native-gesture-handler";
@@ -10,23 +10,29 @@ import {
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
 import CameraComponent from "../../components/Camera";
 import { showImagePicker } from "../../utils/imagePicker";
+import * as Animatable from "react-native-animatable";
 
-export const CameraScreen = connectActionSheet(({ navigation }) => {
+const options = ["Select photos", "Take a photo", "Cancel"];
+
+export const CameraScreen = connectActionSheet(({ route, navigation }) => {
   const [modalVisible, setModalVisable] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
-  const [images, setImages] = useState([]);
+  const [pictures, setPictures] = useState([]);
+  const [error, setError] = useState(false);
 
   const handleImageUpload = (image) => {
-    setImages(images.concat(image));
+    setPictures(pictures.concat(image));
+    setError(false);
   };
 
   const handleImageSelection = async () => {
     const result = await showImagePicker();
     if (!result.cancelled) {
-      setImages(images.concat(result.uri));
+      setPictures(pictures.concat(result.uri));
+      setError(false);
     }
   };
-  const options = ["Select photos", "Take a photo", "Cancel"];
+
   const onOpenActionSheet = () => {
     showActionSheetWithOptions(
       {
@@ -46,8 +52,20 @@ export const CameraScreen = connectActionSheet(({ navigation }) => {
   };
 
   const onDeleteImage = (index) => {
-    setImages(images.filter((image, idx) => idx !== index));
+    setPictures(pictures.filter((image, idx) => idx !== index));
   };
+
+  const onFormSubmit = () => {
+    if (pictures.length == 0) {
+      setError(true);
+      validateInputRef.current.shake(800);
+    } else {
+      setError(false);
+    }
+  };
+
+  const validateInputRef = useRef();
+
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
       <CameraComponent
@@ -63,8 +81,8 @@ export const CameraScreen = connectActionSheet(({ navigation }) => {
           of both the front view and the rear view of the book
         </Caption>
       </View>
-      {images.length === 0 && (
-        <View>
+      {pictures.length === 0 && (
+        <Animatable.View ref={validateInputRef}>
           <TouchableOpacity
             style={styles.ActionButton}
             onPress={() => setModalVisable(true)}
@@ -83,11 +101,11 @@ export const CameraScreen = connectActionSheet(({ navigation }) => {
               <Caption style={styles.ActionText}>Select photo</Caption>
             </View>
           </TouchableOpacity>
-        </View>
+        </Animatable.View>
       )}
 
       <View style={styles.PhotoContainer}>
-        {images.map((image, index) => (
+        {pictures.map((image, index) => (
           <View key={index} style={styles.ImageWrapper}>
             <Image
               style={styles.Image}
@@ -105,7 +123,7 @@ export const CameraScreen = connectActionSheet(({ navigation }) => {
           </View>
         ))}
 
-        {images.length === 1 && (
+        {pictures.length === 1 && (
           <TouchableOpacity
             onPress={onOpenActionSheet}
             style={styles.SingleImageWrapper}
@@ -120,11 +138,20 @@ export const CameraScreen = connectActionSheet(({ navigation }) => {
         )}
       </View>
 
-      <View style={{ marginTop: 30 }}>
-        <TouchableOpacity
-          onPress={() => console.log("Posted")}
-          style={styles.SaveButton}
+      {error && (
+        <Caption
+          style={{
+            ...styles.error,
+            textAlign: "center",
+            justifyContent: "center",
+          }}
         >
+          Please select atleast one photo!
+        </Caption>
+      )}
+
+      <View style={{ marginTop: 30 }}>
+        <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
           <Caption style={styles.alignedText}>Post For Sale</Caption>
         </TouchableOpacity>
       </View>

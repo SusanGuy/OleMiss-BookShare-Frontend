@@ -15,10 +15,7 @@ import { login, clearErrors } from "../../redux/actions/auth";
 
 const SigninScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [state, setState] = useState({
-    email: "",
-    password: "",
-  });
+
   const authLoading = useSelector((state) => state.auth.authLoading);
   const error = useSelector((state) => state.auth.error);
 
@@ -60,7 +57,7 @@ const SigninScreen = ({ navigation }) => {
             }}
           />
           {error?.emailError && (
-            <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+            <Text style={[styles.error, { justiyContent: "flex-start" }]}>
               {error?.emailError}
             </Text>
           )}
@@ -81,7 +78,7 @@ const SigninScreen = ({ navigation }) => {
             }}
           />
           {error?.passwordError && (
-            <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+            <Text style={[styles.error, { justiyContent: "flex-start" }]}>
               {error?.passwordError}
             </Text>
           )}

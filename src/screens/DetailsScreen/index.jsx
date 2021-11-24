@@ -89,7 +89,12 @@ const DetailsScreen = ({ navigation, route }) => {
           <Text style={styles.contactOptions}>Contact Via: </Text>
           <View style={styles.buttonContainer}>
             <FloatingButton
-              onPress={() => sendEmail("anilpanta2@gmail.com", "Coding freedom: the ethics and aesthetics of hacking")}
+              onPress={() =>
+                sendEmail(
+                  "anilpanta2@gmail.com",
+                  "Coding freedom: the ethics and aesthetics of hacking"
+                )
+              }
               iconName="mail"
               size={30}
               backgroundColor="#000"
@@ -200,11 +205,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   authorInfo: {
-    marginTop: 12,
+    marginTop: 25,
     flexDirection: "column",
     justifyContent: "space-between",
-    marginLeft: "auto",
-    marginRight: "auto",
+    alignSelf: "center",
   },
   authorKey: {
     alignSelf: "center",

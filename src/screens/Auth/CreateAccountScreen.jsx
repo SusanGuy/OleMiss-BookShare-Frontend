@@ -78,7 +78,7 @@ const CreateAccountScreen = ({ navigation }) => {
               }}
             />
             {error?.nameError && (
-              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              <Text style={[styles.error, { justifyContent: "flex-start" }]}>
                 {error?.nameError}
               </Text>
             )}
@@ -98,7 +98,7 @@ const CreateAccountScreen = ({ navigation }) => {
               }}
             />
             {error?.emailError && (
-              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              <Text style={[styles.error, { justifyContent: "flex-start" }]}>
                 {error?.emailError}
               </Text>
             )}
@@ -118,7 +118,7 @@ const CreateAccountScreen = ({ navigation }) => {
               }}
             />
             {error?.passwordError && (
-              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              <Text style={[styles.error, { justifyContent: "flex-start" }]}>
                 {error?.passwordError}
               </Text>
             )}
@@ -167,7 +167,7 @@ const CreateAccountScreen = ({ navigation }) => {
               }}
             />
             {error?.majorError && (
-              <Text style={[styles.error, { justifyContext: "flex-start" }]}>
+              <Text style={[styles.error, { justifyContent: "flex-start" }]}>
                 {error?.majorError}
               </Text>
             )}
