@@ -16,7 +16,8 @@ export const login = (email, password) => {
         data: { user, token },
       } = await axios.post("/users/login", submitForm);
       await AsyncStorage.setItem("userToken", token);
-      dispatch(authSuccess(token, user));
+      dispatch(authSuccess(token));
+      dispatch(loadUser());
     } catch (err) {
       dispatch(authFail(err.response ? err.response.data : err.message));
     }
@@ -26,10 +27,10 @@ export const login = (email, password) => {
 export const signup = (
   name,
   email,
-  password,
   contact_number,
   classification,
-  major
+  major,
+  { password = undefined, isEnabled = undefined, update = false }
 ) => {
   return async (dispatch) => {
     try {
@@ -37,16 +38,26 @@ export const signup = (
       const submitForm = {
         name,
         email,
-        password,
-        contact_number,
+        contact_number: {
+          value: contact_number,
+        },
         classification,
         major,
       };
-      const {
-        data: { user, token },
-      } = await axios.post("/users", submitForm);
-      await AsyncStorage.setItem("userToken", token);
-      dispatch(authSuccess(token, user));
+
+      if (!update) {
+        submitForm.password = password;
+        const {
+          data: { user, token },
+        } = await axios.post("/users", submitForm);
+
+        await AsyncStorage.setItem("userToken", token);
+        dispatch(authSuccess(token));
+      } else {
+        submitForm.contact_number.visibility = isEnabled;
+        await axios.patch("/users/me", submitForm);
+      }
+      dispatch(loadUser());
     } catch (err) {
       dispatch(authFail(err.response ? err.response.data : err.message));
     }
@@ -59,11 +70,17 @@ export const loadUser = () => {
       const token = await AsyncStorage.getItem("userToken");
       setAuthToken(token);
       const { data } = await axios.get("/users/me");
-      const user = data;
-      dispatch(authSuccess(token, user));
+      dispatch(userLoaded(token, data));
     } catch (err) {
       dispatch(authFail(err.response ? err.response.data : err.message));
     }
+  };
+};
+
+const userLoaded = (token, user) => {
+  return {
+    type: actionTypes.USER_LOADED,
+    payload: { token, user },
   };
 };
 
@@ -73,10 +90,10 @@ const authStart = () => {
   };
 };
 
-const authSuccess = (token, user) => {
+const authSuccess = (token) => {
   return {
     type: actionTypes.AUTH_SUCCESS,
-    payload: { token, user },
+    payload: { token },
   };
 };
 const authFail = (error) => {

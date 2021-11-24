@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
-import { View, StyleSheet, Text } from "react-native";
+import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import {
   ScrollView,
   Switch,
@@ -15,14 +15,36 @@ import {
 } from "@expo/react-native-action-sheet";
 import CameraComponent from "../../components/Camera";
 import { showImagePicker } from "../../utils/imagePicker";
+import { useSelector, useDispatch } from "react-redux";
+import CustomPicker from "../../components/CustomPicker";
+import { clearErrors, signup } from "../../redux/actions/auth";
+
+const pickerOptions = ["Freshmen", "Sophmore", "Junior", "Senior"];
+const options = ["Select photos", "Take a photo", "Cancel"];
 
 const EditProfileScreen = ({ navigation }) => {
+  const user = useSelector((state) => state.auth.user);
+  const authLoading = useSelector((state) => state.auth.authLoading);
+  const error = useSelector((state) => state.auth.error);
+
+  const [state, setState] = useState({
+    name: user?.name,
+    email: user?.email,
+    contact_number: user?.contact_number?.value,
+    major: user?.major,
+  });
+  const [classification, setClassification] = useState(user?.classification);
   const [modalVisible, setModalVisable] = useState(false);
+  const [pickerVisible, setPickerVisible] = useState(false);
   const [avatar, setAvatar] = useState(
-    "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180"
+    user?.avatar
+      ? user.avatar
+      : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180"
   );
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(user?.contact_number?.visibility);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const { name, email, contact_number, major } = state;
 
   const handleImageUpload = (image) => {
     setAvatar(image);
@@ -36,7 +58,7 @@ const EditProfileScreen = ({ navigation }) => {
   };
 
   const { showActionSheetWithOptions } = useActionSheet();
-  const options = ["Select photos", "Take a photo", "Cancel"];
+
   const onOpenActionSheet = () => {
     showActionSheetWithOptions(
       {
@@ -55,8 +77,34 @@ const EditProfileScreen = ({ navigation }) => {
     );
   };
 
+  const validateInput = useRef();
+
+  const dispatch = useDispatch();
+  const onUpdate = () => {
+    dispatch(
+      signup(name, email, contact_number, classification, major, {
+        isEnabled,
+        update: true,
+      })
+    );
+    if (error) {
+      validateInput.current.shake(800);
+    }
+  };
+
+  useEffect(() => {
+    if (error) {
+      dispatch(clearErrors());
+    }
+  }, []);
+
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView
+      style={{
+        backgroundColor: pickerVisible ? "rgba(255,255,255,0.1)" : "#fff",
+        flex: 1,
+      }}
+    >
       <StatusBar hidden={false} />
       <CameraComponent
         modalVisible={modalVisible}
@@ -75,7 +123,7 @@ const EditProfileScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Animatable.View>
+      <Animatable.View ref={validateInput}>
         <View
           style={{
             ...styles.InputWrapper,
@@ -85,91 +133,158 @@ const EditProfileScreen = ({ navigation }) => {
         >
           <Caption style={styles.Label}>Name</Caption>
           <TextInput
-            value={"Susan Subedi"}
-            style={styles.Input}
+            value={name}
+            style={[styles.Input, error?.nameError && styles.borderError]}
             returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, name: text });
+            }}
+            onFocus={() => {
+              if (error?.error || error?.nameError) {
+                dispatch(clearErrors());
+              }
+            }}
           />
+          {error?.nameError && (
+            <Caption style={styles.error}>{error?.nameError}</Caption>
+          )}
         </View>
 
         <View style={styles.InputWrapper}>
           <Caption style={styles.Label}>Email</Caption>
           <TextInput
-            value={"ssubedi1@go.olemiss.edu"}
-            style={styles.Input}
+            value={email}
+            style={[styles.Input, error?.emailError && styles.borderError]}
             keyboardType="email-address"
             returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, email: text });
+            }}
+            onFocus={() => {
+              if (error?.error || error?.emailError) {
+                dispatch(clearErrors());
+              }
+            }}
           />
+          {error?.emailError && (
+            <Caption style={styles.error}>{error?.emailError}</Caption>
+          )}
         </View>
         <View style={styles.InputWrapper}>
           <Caption style={styles.Label}>Phone</Caption>
           <TextInput
-            style={styles.Input}
+            value={contact_number}
             keyboardType="phone-pad"
-            value={"6822518746"}
+            style={styles.Input}
             returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, contact_number: text });
+            }}
           />
         </View>
         <View style={styles.InputWrapper}>
           <Caption style={styles.Label}>Classification</Caption>
           <TextInput
+            value={classification}
             style={styles.Input}
-            value={"Freshmen"}
-            returnKeyType="done"
+            editable={false}
+            selectTextOnFocus={false}
+            returnKeyType="next"
+            onPressIn={() => {
+              setPickerVisible(true);
+            }}
+            onChangeText={(text) => {
+              setState({ ...state, classification: text });
+            }}
           />
         </View>
+        {pickerVisible && (
+          <CustomPicker
+            options={pickerOptions}
+            value={classification}
+            setValue={setClassification}
+            modalVisible={pickerVisible}
+            setModalVisible={setPickerVisible}
+          />
+        )}
         <View
           style={{
             ...styles.InputWrapper,
-            borderBottomColor: "#ddd",
+            borderBottomColor: error?.majorError ? "#D91848" : "#ddd",
             borderBottomWidth: 1,
           }}
         >
           <Caption style={styles.Label}>Major</Caption>
           <TextInput
             style={{ ...styles.Input, borderBottomWidth: 0 }}
-            value={"Computer Science"}
+            value={major}
             returnKeyType="done"
+            onChangeText={(text) => {
+              setState({ ...state, major: text });
+            }}
+            onFocus={() => {
+              if (error?.error || error?.majorError) {
+                dispatch(clearErrors());
+              }
+            }}
           />
         </View>
-      </Animatable.View>
-      <View style={styles.PrivacyContainer}>
-        <Title style={styles.Label}>PRIVACY</Title>
-        <View
-          style={{
-            ...styles.InputWrapper,
-            borderTopColor: "#ddd",
-            borderTopWidth: 1,
-            borderBottomColor: "#ddd",
-            borderBottomWidth: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingRight: 10,
-          }}
-        >
-          <Text
+        {error?.majorError && (
+          <Caption style={styles.error}>{error?.majorError}</Caption>
+        )}
+
+        <View style={styles.PrivacyContainer}>
+          <Title style={styles.Label}>PRIVACY</Title>
+          <View
             style={{
-              ...styles.Label,
-              fontSize: 16,
-              marginBottom: 15,
-              marginTop: 15,
+              ...styles.InputWrapper,
+              borderTopColor: "#ddd",
+              borderTopWidth: 1,
+              borderBottomColor: "#ddd",
+              borderBottomWidth: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingRight: 10,
             }}
           >
-            Share Phone Number
-          </Text>
-          <Switch
-            trackColor={{ false: "#767577", true: "#3c91e6" }}
-            thumbColor="#fff"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          />
+            <Text
+              style={{
+                ...styles.Label,
+                fontSize: 16,
+                marginBottom: 15,
+                marginTop: 15,
+              }}
+            >
+              Share Phone Number
+            </Text>
+            <Switch
+              trackColor={{ false: "#767577", true: "#3c91e6" }}
+              thumbColor="#fff"
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+          </View>
         </View>
-      </View>
-      <TouchableOpacity
-        onPress={() => console.log("Save")}
-        style={styles.SaveButton}
-      >
-        <Caption style={styles.alignedText}>Save Changes</Caption>
+        {error?.error && (
+          <Caption
+            style={{
+              ...styles.error,
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            {error?.error}
+          </Caption>
+        )}
+      </Animatable.View>
+
+      <TouchableOpacity onPress={onUpdate} style={styles.SaveButton}>
+        {!authLoading ? (
+          <Caption style={styles.alignedText}>Save Changes</Caption>
+        ) : (
+          <ActivityIndicator color="#fff" />
+        )}
       </TouchableOpacity>
     </ScrollView>
   );
@@ -217,6 +332,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   alignedText: { textAlign: "center", color: "#FFF", fontSize: 16 },
+  error: {
+    marginLeft: 10,
+    marginTop: 10,
+    color: "#D91848",
+    justifyContent: "flex-start",
+  },
+  borderError: {
+    borderBottomColor: "#D91848",
+  },
 });
 
 export default connectActionSheet(EditProfileScreen);

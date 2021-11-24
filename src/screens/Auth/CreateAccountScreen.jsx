@@ -42,7 +42,7 @@ const CreateAccountScreen = ({ navigation }) => {
 
   const onSignup = () => {
     dispatch(
-      signup(name, email, password, contact_number, classification, major)
+      signup(name, email, contact_number, classification, major, { password })
     );
     if (error) {
       validateInput.current.shake(800);

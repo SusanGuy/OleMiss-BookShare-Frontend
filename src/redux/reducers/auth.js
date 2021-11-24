@@ -25,6 +25,15 @@ const authReducer = (state = initialState, action) => {
         error: null,
         ...payload,
       };
+    case actionTypes.USER_LOADED:
+      return {
+        ...state,
+        loading: false,
+        authLoading: false,
+        error: null,
+        ...payload,
+      };
+
     case actionTypes.AUTH_FAIL:
       return {
         ...state,

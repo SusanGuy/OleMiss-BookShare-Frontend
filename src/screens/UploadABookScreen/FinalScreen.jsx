@@ -69,7 +69,13 @@ export const FinalScreen = ({ route, navigation }) => {
   };
 
   return (
-    <ScrollView style={{ flex: 1, padding: 10 }}>
+    <ScrollView
+      style={{
+        backgroundColor: modalVisible ? "rgba(255,255,255,0.1)" : "#fff",
+        flex: 1,
+        padding: 10,
+      }}
+    >
       <View style={styles.UploadCard}>
         <Caption style={styles.StepText}>Step 3 of 4</Caption>
         <Title stule={styles.ModalHeader}>Give us more info</Title>

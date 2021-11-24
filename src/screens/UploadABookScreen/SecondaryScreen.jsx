@@ -53,7 +53,7 @@ export const SecondaryScreen = ({ route, navigation }) => {
     if (route?.params) {
       setState({
         ...state,
-        ...route?.params,
+        ...route?.params.bookState,
       });
     }
   }, []);
