@@ -1,71 +1,84 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
-
-const books = [
-  {
-    id: "1",
-    title: "Coding freedom: the ethics and aesthetics of hacking",
-    authorName: "Coleman, E. Gabriella",
-    image: "https://wallpapercave.com/wp/wp4624320.jpg",
-    isbn: 9794814093679,
-    price: 0,
-    condition: "Used",
-    active: true,
-    edition: 1,
-  },
-  {
-    id: "2",
-    title: "Foundation & Empire",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 9793148611917,
-    price: 13.54,
-    condition: "New",
-    active: false,
-    edition: 11,
-  },
-  {
-    id: "3",
-    title: "Design For everyday",
-    authorName: "Don Norman",
-    image: "https://images-na.ssl-images-amazon.com/images/I/81zpLhP1gWL.jpg",
-    isbn: 9790064851946,
-    price: 88,
-    condition: "Used",
-    active: false,
-    edition: 9,
-  },
-];
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "../../utils/axios";
+import Loader from "../../components/Loader";
+import { loadUser } from "../../redux/actions/auth";
+import { useDispatch } from "react-redux";
 
 const BookmarksScreen = ({ navigation }) => {
-  if (books.length == 0) {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const fetchBookmarks = async () => {
+    try {
+      const { data } = await axios.get("/users/me/bookmarks");
+      setBooks(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const handleBookDeletion = async (id) => {
+    try {
+      await axios.delete("/users/bookmark/" + id);
+      setBooks(books.filter((book) => book._id !== id));
+      dispatch(loadUser());
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      fetchBookmarks();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  if (!loading && books.length === 0) {
     return (
       <EmptyListPlaceholder>
-        You haven't added any Books to your Bookmarks yet
+        You haven't added any books to your bookmarks yet
       </EmptyListPlaceholder>
     );
   }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <View style={{ flex: 1 }}>
+        <Loader loading={loading} />
         <FlatList
           showsVerticalScrollIndicator={false}
-          keyExtractor={({ id }) => id}
+          keyExtractor={({ _id }) => _id}
           data={books}
           renderItem={({ item }) =>
             item.active ? (
               <TouchableOpacity
-                onPress={() => navigation.push("Details")}
+                onPress={() => navigation.push("Details", { id: item._id })}
                 activeOpacity={1}
                 underlayColor="#eee"
               >
-                <Card bookmarks item={item} />
+                <Card
+                  handleBookDeletion={handleBookDeletion}
+                  bookmarks
+                  item={item}
+                  navigation={navigation}
+                />
               </TouchableOpacity>
             ) : (
-              <Card bookmarks item={item} />
+              <Card
+                handleBookDeletion={handleBookDeletion}
+                bookmarks
+                item={item}
+                navigation={navigation}
+              />
             )
           }
         />

@@ -47,7 +47,7 @@ const CameraComponent = ({
   //   }
 
   const savePhoto = () => {
-    handleImageUpload(capturedImage.uri);
+    handleImageUpload(capturedImage);
     setModalVisible(false);
     setPreviewVisible(false);
     setCapturedImage(null);

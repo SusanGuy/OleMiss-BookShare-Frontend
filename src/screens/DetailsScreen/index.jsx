@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
   Image,
+  Alert,
   StyleSheet,
   ScrollView,
   Dimensions,
@@ -13,18 +14,73 @@ import FloatingButton from "../../components/FloatingButton";
 import HorizontalLine from "../../components/HorizontalLine";
 import { Ionicons } from "@expo/vector-icons";
 import { sendEmail, sendSMS } from "../../utils/contact";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "../../utils/axios";
+import Loader from "../../components/Loader";
+import moment from "moment";
+import { useSelector, useDispatch } from "react-redux";
+import { loadUser } from "../../redux/actions/auth";
 
 const height = Dimensions.get("window").height;
 
 const DetailsScreen = ({ navigation, route }) => {
+  const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const user = useSelector((state) => state.auth.user);
+  const bookmarkExists =
+    user.bookmarks.find((bookmark) => bookmark === book?._id) !== undefined;
+
+  const dispatch = useDispatch();
+  const notAllowed = (book && user._id === book.seller._id) || user._id.isAdmin;
+
+  const fetchBook = async (id) => {
+    try {
+      const { data } = await axios.get("/sales/" + id);
+      setBook(data);
+      setLoading(false);
+    } catch (error) {
+      Alert.alert(
+        error?.response?.data ? error.response.data.error : error.message
+      );
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      fetchBook(route?.params?.id);
+      return () => {
+        isActive = false;
+      };
+    }, [route])
+  );
+
+  const handleBookmarks = async () => {
+    try {
+      if (bookmarkExists) {
+        await axios.delete("/users/bookmark/" + book?._id);
+        dispatch(loadUser());
+      } else {
+        await axios.post("/users/bookmark/" + book?._id);
+        dispatch(loadUser());
+      }
+    } catch (error) {
+      Alert.alert(
+        error?.response?.data ? error.response.data.error : error.message
+      );
+    }
+  };
+
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
+      <Loader loading={loading} />
       <StatusBar hidden={true} />
       <View style={{ position: "relative" }}>
         <Image
           style={styles.image}
           source={{
-            uri: "https://wallpapercave.com/wp/wp4624320.jpg",
+            uri: book && book.pictures[0],
           }}
           resizeMode="cover"
         />
@@ -37,85 +93,101 @@ const DetailsScreen = ({ navigation, route }) => {
           </Ionicons>
         </TouchableOpacity>
       </View>
-
       <View style={styles.container}>
-        <View style={styles.bookmarkIcon}>
-          <FloatingButton
-            color="#fff"
-            backgroundColor="#eec643"
-            iconName="bookmark-outline"
-          />
-        </View>
+        {!notAllowed && (
+          <View style={styles.bookmarkIcon}>
+            <FloatingButton
+              onPress={handleBookmarks}
+              color="#fff"
+              backgroundColor="#eec643"
+              iconName={!bookmarkExists ? "bookmark-outline" : "bookmark"}
+            />
+          </View>
+        )}
         <View style={styles.types}>
-          <Text style={styles.type}>ISBN: 10202020202</Text>
-          <Text style={styles.type}>CSCI 412</Text>
+          <Text style={styles.type}>ISBN: {book && book.book.isbn}</Text>
+          <Text style={styles.type}>
+            {book && book.course_name} {book && book.course_code}
+          </Text>
         </View>
         <HorizontalLine marginTop={10} marginBottom={10} />
-        <Text style={styles.title}>
-          Coding freedom: the ethics and aesthetics of hacking
-        </Text>
+        <Text style={styles.title}>{book && book?.book.title}</Text>
         <View style={styles.organizerInfo}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.infoText}>Posted By </Text>
-            <TouchableOpacity>
-              <Text style={styles.organizer}>Clark Kent</Text>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.push("Profile", { id: book?.seller?._id })
+              }
+            >
+              <Text style={styles.organizer}>{book?.seller.name}</Text>
             </TouchableOpacity>
           </View>
-          <Text style={styles.infoText}>30 mins ago</Text>
+          <Text style={styles.infoText}>
+            {book && moment(book.updatedAt).fromNow()}
+          </Text>
         </View>
         <HorizontalLine marginTop={10} marginBottom={10} />
         <View style={styles.amountConditionContainer}>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Price</Text>
-            <Text style={styles.amountConditionValue}>$0</Text>
+            <Text style={styles.amountConditionValue}>
+              ${book?.amount.toFixed(2)}
+            </Text>
           </View>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Condition</Text>
-            <Text style={styles.amountConditionValue}>Used</Text>
+            <Text style={styles.amountConditionValue}>{book?.condition}</Text>
           </View>
           <View style={styles.amountConditionInfo}>
             <Text style={styles.amountConditionKey}>Edition</Text>
-            <Text style={styles.amountConditionValue}>9</Text>
+            <Text style={styles.amountConditionValue}>
+              {book?.book?.edition}
+            </Text>
           </View>
         </View>
         <View style={styles.authorInfo}>
           <Text style={styles.authorKey}>Authors</Text>
+
           <View style={styles.authorValue}>
-            <Text style={styles.type}>Gabriella Coleman</Text>
+            {book &&
+              book.book?.authors.map((author) => (
+                <Text key={author} style={styles.type}>
+                  {author}
+                </Text>
+              ))}
           </View>
         </View>
         <HorizontalLine marginTop={15} marginBottom={10} />
-        <View style={styles.contactContainer}>
-          <Text style={styles.contactOptions}>Contact Via: </Text>
-          <View style={styles.buttonContainer}>
-            <FloatingButton
-              onPress={() =>
-                sendEmail(
-                  "anilpanta2@gmail.com",
-                  "Coding freedom: the ethics and aesthetics of hacking"
-                )
-              }
-              iconName="mail"
-              size={30}
-              backgroundColor="#000"
-              color="#fff"
-            />
-
-            <FloatingButton
-              onPress={() =>
-                sendSMS(
-                  "6627158218",
-                  "Coding freedom: the ethics and aesthetics of hacking"
-                )
-              }
-              marginLeft={20}
-              iconName="chatbubble"
-              size={30}
-              backgroundColor="#000"
-              color="#fff"
-            />
+        {!notAllowed && (
+          <View style={styles.contactContainer}>
+            <Text style={styles.contactOptions}>Contact Via: </Text>
+            <View style={styles.buttonContainer}>
+              <FloatingButton
+                onPress={() =>
+                  sendEmail(book?.seller?.email, book?.book?.title)
+                }
+                iconName="mail"
+                size={30}
+                backgroundColor="#000"
+                color="#fff"
+              />
+              {book?.contact_number?.visibility &&
+                book?.contact_number?.value && (
+                  <FloatingButton
+                    onPress={() =>
+                      sendSMS(book?.contact_number?.value, book?.book?.title)
+                    }
+                    marginLeft={20}
+                    iconName="chatbubble"
+                    size={30}
+                    backgroundColor="#000"
+                    color="#fff"
+                  />
+                )}
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -164,6 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 7,
     paddingVertical: 8,
+    marginBottom: 10,
   },
   title: {
     fontWeight: "bold",

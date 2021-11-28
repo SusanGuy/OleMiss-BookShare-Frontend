@@ -1,116 +1,123 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Ionicons as Icon } from "@expo/vector-icons";
+import React, { useState } from "react";
 import {
-  FlatList,
   ScrollView,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+  View,
+  StyleSheet,
+  Text,
+} from "react-native";
+import { Ionicons as Icon } from "@expo/vector-icons";
 import { Avatar, Caption, Title } from "react-native-paper";
 import { ListCard } from "../../components/Card";
+import { useSelector } from "react-redux";
+import axios from "../../utils/axios";
+import { useFocusEffect } from "@react-navigation/native";
+import Loader from "../../components/Loader";
 
-const books = [
-  {
-    id: "1",
-    title: "Information Storage and Retrieval",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
-    price: 13.54,
-    condition: "Used",
-    date: "a day ago",
-    active: true,
-  },
-  {
-    id: "2",
-    title: "Fundamentals of Computer System",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
-    price: 13.54,
-    condition: "New",
-    date: "3 days ago",
-    active: true,
-  },
-  {
-    id: "3",
-    title: "Introduction to Java Programming",
-    authorName: "Greg Shields",
-    image:
-      "https://www.adobe.com/content/dam/cc/us/en/creativecloud/illustration-adobe-illustration/vector-art/desktop/vector-art_P1_900x420.jpg.img.jpg",
-    isbn: 1356996,
-    price: 13.54,
-    condition: "Used",
-    date: "a month ago",
-    active: true,
-  },
-];
+const ProfileScreen = ({ route, navigation }) => {
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  let id = useSelector((state) => state.auth.user._id);
 
-const ProfileScreen = ({ navigation }) => {
+  const fetchUser = async (id) => {
+    try {
+      const { data } = await axios.get("/users/" + id);
+      setProfile(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      fetchUser(
+        route && route.params && route.params.id ? route.params.id : id
+      );
+      return () => {
+        isActive = false;
+      };
+    }, [route, id])
+  );
+
+  const booksWrapper =
+    !loading && profile?.booksForSale && profile.selling > 0 ? (
+      profile?.booksForSale.map((item) => (
+        <TouchableOpacity
+          key={item._id}
+          onPress={() => navigation.push("Details", { id: item._id })}
+          activeOpacity={1}
+          underlayColor="#eee"
+        >
+          <ListCard item={item} profile />
+        </TouchableOpacity>
+      ))
+    ) : (
+      <Caption style={{ fontSize: 15 }}>
+        {route?.params?.id ? "This user is" : "You are"} not selling any book
+        right now!
+      </Caption>
+    );
+
   return (
     <ScrollView style={styles.Container}>
       <StatusBar hidden={true} />
+      <Loader loading={loading} />
       <View style={styles.TopContainer}>
         <View style={styles.TopButtonContainer}>
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Icon style={styles.Icon} name="close" />
           </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.Icon}
-            onPress={() => navigation.push("Edit Profile")}
-          >
-            <Icon style={styles.Icon} name="create-outline" />
-          </TouchableOpacity>
+          {profile?.id === id && (
+            <TouchableOpacity
+              style={styles.Icon}
+              onPress={() => navigation.push("Edit Profile")}
+            >
+              <Icon style={styles.Icon} name="create-outline" />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={styles.InformationWrapper}>
           <Avatar.Image
             source={{
-              uri: "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+              uri: profile?.avatar
+                ? profile.avatar
+                : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
             }}
             size={100}
           />
 
-          <Title style={styles.Title}>Susan Subedi</Title>
-          <Caption style={styles.Caption}>@ssubedi1</Caption>
+          <Title style={styles.Title}>{profile?.name}</Title>
+          <Caption style={styles.Caption}>{profile?.email}</Caption>
         </View>
         <View style={styles.BookWrapper}>
           <View style={styles.ColumnContainer}>
-            <Title style={styles.Value}>3</Title>
+            <Title style={styles.Value}>{profile?.selling}</Title>
             <Caption style={styles.Key}>Selling</Caption>
           </View>
           <View style={styles.ColumnContainer}>
-            <Title style={styles.Value}>4</Title>
+            <Title style={styles.Value}>{profile?.sold}</Title>
             <Caption style={styles.Key}>Sold</Caption>
           </View>
           <View style={styles.ColumnContainer}>
-            <Title style={styles.Value}>3</Title>
-            <Caption style={styles.Key}>Requsted</Caption>
+            <Title style={styles.Value}>{profile?.requested}</Title>
+            <Caption style={styles.Key}>Requested</Caption>
           </View>
         </View>
       </View>
       <View style={styles.MiddleContainer}>
         <Title style={styles.MainTopic}>Recently Selling</Title>
-        {books.map((item) => (
-          <TouchableOpacity
-            key={item.id}
-            onPress={() => navigation.push("Details")}
-            activeOpacity={1}
-            underlayColor="#eee"
-          >
-            <ListCard item={item} profile />
-          </TouchableOpacity>
-        ))}
+        {booksWrapper}
       </View>
       <View style={{ borderBottomColor: "#e5e5e5", borderBottomWidth: 1 }} />
       <View style={styles.BottomContainer}>
         <Title style={styles.MainTopic}>More Info</Title>
         <View style={styles.types}>
-          <Text style={styles.type}>Computer Science</Text>
-          <Text style={styles.type}>Junior</Text>
+          <Text style={styles.type}>{profile?.major}</Text>
+          <Text style={styles.type}>{profile?.classification}</Text>
         </View>
       </View>
     </ScrollView>

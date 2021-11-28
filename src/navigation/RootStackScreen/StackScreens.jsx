@@ -11,7 +11,7 @@ import SoldBooksScreen from "../../screens/SoldBooksScreen";
 import RequestedScreen from "../../screens/RequestedFeedScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
 import EditProfileScreen from "../../screens/EditProfileScreen";
-import RequestedBooksScreen from "../../screens/RequestedBooksScreen/RequestedBooksScreen";
+import RequestedBooksScreen from "../../screens/RequestedBooksScreen";
 import {
   horizontalAnimation,
   verticalAnimation,
@@ -80,6 +80,13 @@ export const HomeStackScreen = ({ navigation }) => (
       }}
       component={DetailsScreen}
     />
+    <HomeStack.Screen
+      name="Profile"
+      options={{
+        headerShown: false,
+      }}
+      component={ProfileScreen}
+    />
   </HomeStack.Navigator>
 );
 
@@ -105,6 +112,20 @@ export const FeedStackScreen = ({ navigation }) => (
         ),
         headerShown: true,
       }}
+    />
+    <FeedStack.Screen
+      name="Profile"
+      options={{
+        headerShown: false,
+      }}
+      component={ProfileScreen}
+    />
+    <FeedStack.Screen
+      name="Details"
+      options={{
+        headerShown: false,
+      }}
+      component={DetailsScreen}
     />
   </FeedStack.Navigator>
 );
@@ -139,6 +160,13 @@ export const BookmarksStackScreen = ({ navigation }) => (
         headerShown: false,
       }}
       component={DetailsScreen}
+    />
+    <BookmarksStack.Screen
+      name="Profile"
+      options={{
+        headerShown: false,
+      }}
+      component={ProfileScreen}
     />
   </BookmarksStack.Navigator>
 );
@@ -202,6 +230,13 @@ export const SoldBooksStackScreen = ({ navigation }) => (
       }}
       component={DetailsScreen}
     />
+    <SoldBooksStack.Screen
+      name="Profile"
+      options={{
+        headerShown: false,
+      }}
+      component={ProfileScreen}
+    />
   </SoldBooksStack.Navigator>
 );
 
@@ -219,6 +254,13 @@ export const ProfileStackScreen = ({ navigation }) => (
         headerShown: false,
       }}
       component={ProfileScreen}
+    />
+    <ProfileStack.Screen
+      name="Details"
+      options={{
+        headerShown: false,
+      }}
+      component={DetailsScreen}
     />
     <ProfileStack.Screen
       name="Edit Profile"

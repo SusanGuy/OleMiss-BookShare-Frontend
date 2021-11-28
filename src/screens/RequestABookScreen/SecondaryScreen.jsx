@@ -1,12 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View } from "react-native";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
 
 export const SecondaryScreen = ({ route, navigation }) => {
@@ -50,13 +45,21 @@ export const SecondaryScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    if (route?.params) {
+    if (route?.params?.bookState) {
       setState({
         ...state,
-        ...route?.params.bookState,
+        title: route?.params?.bookState?.title
+          ? route.params.bookState.title
+          : "",
+        edition: route?.params?.bookState?.edition
+          ? route.params.bookState.edition
+          : "",
+        authors: route?.params?.bookState?.authors
+          ? route.params.bookState.authors
+          : "",
       });
     }
-  }, []);
+  }, [route]);
 
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>

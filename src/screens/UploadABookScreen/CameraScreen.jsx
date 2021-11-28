@@ -1,7 +1,13 @@
-import React, { useState, useRef } from "react";
-import { Image, View, TouchableOpacity } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  View,
+  Alert,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { Caption, Title } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import {
   connectActionSheet,
@@ -11,25 +17,61 @@ import { uploadFormStyles as styles } from "../../constants/sharedStyles";
 import CameraComponent from "../../components/Camera";
 import { showImagePicker } from "../../utils/imagePicker";
 import * as Animatable from "react-native-animatable";
+import axios from "../../utils/axios";
 
 const options = ["Select photos", "Take a photo", "Cancel"];
+
+const findUploadedPictures = (pictures) => {
+  const images = [];
+  pictures.forEach((picture) => {
+    if (picture.selectedOrUploaded === false) {
+      images.push(picture.image);
+    }
+  });
+  return images;
+};
 
 export const CameraScreen = connectActionSheet(({ route, navigation }) => {
   const [modalVisible, setModalVisable] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
   const [pictures, setPictures] = useState([]);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [deletedImages, setDeletedImages] = useState([]);
+
+  useEffect(() => {
+    if (route?.params?.bookState) {
+      setPictures(
+        route?.params?.bookState?.pictures
+          ? route.params.bookState.pictures.map((picture) => {
+              return { image: picture, selectedOrUploaded: false };
+            })
+          : []
+      );
+    }
+  }, [route]);
 
   const handleImageUpload = (image) => {
-    setPictures(pictures.concat(image));
-    setError(false);
+    setPictures(
+      pictures.concat({
+        image: image,
+        selectedOrUploaded: true,
+      })
+    );
+    setError("");
   };
 
   const handleImageSelection = async () => {
     const result = await showImagePicker();
+
     if (!result.cancelled) {
-      setPictures(pictures.concat(result.uri));
-      setError(false);
+      setPictures(
+        pictures.concat({
+          image: result,
+          selectedOrUploaded: true,
+        })
+      );
+      setError("");
     }
   };
 
@@ -52,16 +94,74 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
   };
 
   const onDeleteImage = (index) => {
+    if (!pictures[index].selectedOrUploaded) {
+      setDeletedImages(deletedImages.concat(pictures[index].image));
+    }
+
     setPictures(pictures.filter((image, idx) => idx !== index));
   };
 
-  const onFormSubmit = () => {
-    if (pictures.length == 0) {
-      setError(true);
+  const onFormSubmit = async () => {
+    if (pictures.length === 0) {
+      setError("Please select atleast one picture!");
       validateInputRef.current.shake(800);
     } else {
-      console.log(route?.params?.bookState);
-      setError(false);
+      setError("");
+      const formData = new FormData();
+      const bookState = {
+        isbn: route?.params?.bookState?.isbn,
+        title: route?.params?.bookState?.title,
+        edition: route?.params?.bookState?.edition,
+        authors: route?.params.bookState?.authors,
+        amount: route?.params?.bookState?.amount,
+        condition: route?.params?.bookState?.condition,
+        course_name: route?.params?.bookState?.course_name,
+        course_code: route?.params?.bookState?.course_code,
+      };
+      Object.keys(bookState).forEach((key) => {
+        formData.append(key, bookState[key]);
+      });
+      if (!route?.params?.bookState?.id) {
+        pictures.forEach((photo) => {
+          formData.append("files", {
+            name: photo.image.uri,
+            type: photo.image.type + "/jpeg",
+            uri: photo.image.uri,
+          });
+        });
+      } else {
+        pictures.forEach((photo) => {
+          if (photo.selectedOrUploaded) {
+            formData.append("files", {
+              name: photo.image.uri,
+              type: photo.image.type + "/jpeg",
+              uri: photo.image.uri,
+            });
+          }
+        });
+        formData.append(
+          "pictures",
+          JSON.stringify(findUploadedPictures(pictures))
+        );
+        formData.append("deletedPictures", JSON.stringify(deletedImages));
+      }
+
+      try {
+        setLoading(true);
+        if (route?.params?.bookState?.id) {
+          setLoading(false);
+          await axios.patch(`/sales/${route.params.bookState.id}`, formData);
+          Alert.alert("Book Updated succesfully!");
+        } else {
+          await axios.post("/sales/", formData);
+          setLoading(false);
+          Alert.alert("Book Listed for Sale succesfully!");
+        }
+        navigation.replace("SoldBooksScreen");
+      } catch (err) {
+        setError(err.response.data.errMessage);
+        setLoading(false);
+      }
     }
   };
 
@@ -111,7 +211,7 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
             <Image
               style={styles.Image}
               source={{
-                uri: image,
+                uri: image.selectedOrUploaded ? image.image.uri : image.image,
               }}
               resizeMode="cover"
             />
@@ -139,22 +239,25 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
         )}
       </View>
 
-      {error && (
-        <Caption
-          style={{
-            ...styles.error,
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          Please select atleast one photo!
-        </Caption>
-      )}
-
       <View style={{ marginTop: 30 }}>
         <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
-          <Caption style={styles.alignedText}>Post For Sale</Caption>
+          {!loading ? (
+            <Caption style={styles.alignedText}>Post for Sale</Caption>
+          ) : (
+            <ActivityIndicator color="#fff" />
+          )}
         </TouchableOpacity>
+        {error !== "" && (
+          <Caption
+            style={{
+              ...styles.error,
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            {error}
+          </Caption>
+        )}
       </View>
     </ScrollView>
   );

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import { Searchbar } from "react-native-paper";
 
-const SearchBarHeader = ({ navigation }) => {
+const SearchBarHeader = ({ navigation, handleSearch }) => {
   return (
     <View style={[styles.container, styles.bottomLine]}>
       <View style={styles.flexContainer}>
@@ -17,6 +17,9 @@ const SearchBarHeader = ({ navigation }) => {
         <Text style={styles.searchText}>What are you looking for?</Text>
       </View>
       <Searchbar
+        onChangeText={(text) => {
+          handleSearch(text);
+        }}
         placeholder="Book Title / Course / ISBN"
         placeholderTextColor="#BBBBBB"
         iconColor="#000"

@@ -1,13 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useRef, useState, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
-import { ActivityIndicator, View, StyleSheet, Text } from "react-native";
 import {
   ScrollView,
   Switch,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+  ActivityIndicator,
+  View,
+  StyleSheet,
+  Text,
+} from "react-native";
 import { Avatar, Caption, Title } from "react-native-paper";
 import {
   connectActionSheet,
@@ -17,15 +20,21 @@ import CameraComponent from "../../components/Camera";
 import { showImagePicker } from "../../utils/imagePicker";
 import { useSelector, useDispatch } from "react-redux";
 import CustomPicker from "../../components/CustomPicker";
-import { clearErrors, signup } from "../../redux/actions/auth";
+import {
+  clearErrors,
+  deleteImage,
+  signup,
+  uploadImage,
+} from "../../redux/actions/auth";
+import Loader from "../../components/Loader";
 
 const pickerOptions = ["Freshmen", "Sophmore", "Junior", "Senior"];
-const options = ["Select photos", "Take a photo", "Cancel"];
 
 const EditProfileScreen = ({ navigation }) => {
   const user = useSelector((state) => state.auth.user);
   const authLoading = useSelector((state) => state.auth.authLoading);
   const error = useSelector((state) => state.auth.error);
+  const [avatarLoading, setAvatarLoading] = useState(false);
 
   const [state, setState] = useState({
     name: user?.name,
@@ -36,24 +45,32 @@ const EditProfileScreen = ({ navigation }) => {
   const [classification, setClassification] = useState(user?.classification);
   const [modalVisible, setModalVisable] = useState(false);
   const [pickerVisible, setPickerVisible] = useState(false);
-  const [avatar, setAvatar] = useState(
-    user?.avatar
-      ? user.avatar
-      : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180"
-  );
+
   const [isEnabled, setIsEnabled] = useState(user?.contact_number?.visibility);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const { name, email, contact_number, major } = state;
 
-  const handleImageUpload = (image) => {
-    setAvatar(image);
+  const dispatch = useDispatch();
+
+  const handleImageUpload = async (image) => {
+    setAvatarLoading(true);
+    await dispatch(uploadImage(image));
+    setAvatarLoading(false);
+  };
+
+  const handleImageDeletion = async (image) => {
+    setAvatarLoading(true);
+    await dispatch(deleteImage());
+    setAvatarLoading(false);
   };
 
   const handleImageSelection = async () => {
     const result = await showImagePicker();
     if (!result.cancelled) {
-      setAvatar(result.uri);
+      setAvatarLoading(true);
+      await dispatch(uploadImage(result));
+      setAvatarLoading(false);
     }
   };
 
@@ -62,16 +79,22 @@ const EditProfileScreen = ({ navigation }) => {
   const onOpenActionSheet = () => {
     showActionSheetWithOptions(
       {
-        options,
-        cancelButtonIndex: 2,
+        options:
+          user?.avatar && user.avatar !== ""
+            ? ["Select photos", "Take a photo", "Delete Photo", "Cancel"]
+            : ["Select photos", "Take a photo", "Cancel"],
+        cancelButtonIndex: user?.avatar && user.avatar !== "" ? 3 : 2,
         destructiveButtonIndex: 2,
       },
       (buttonIndex) => {
-        if (buttonIndex == 0) {
+        if (buttonIndex === 0) {
           handleImageSelection();
         }
-        if (buttonIndex == 1) {
+        if (buttonIndex === 1) {
           setModalVisable(true);
+        }
+        if (user?.avatar && user.avatar !== "" && buttonIndex === 2) {
+          handleImageDeletion();
         }
       }
     );
@@ -79,7 +102,6 @@ const EditProfileScreen = ({ navigation }) => {
 
   const validateInput = useRef();
 
-  const dispatch = useDispatch();
   const onUpdate = () => {
     dispatch(
       signup(name, email, contact_number, classification, major, {
@@ -105,6 +127,7 @@ const EditProfileScreen = ({ navigation }) => {
         flex: 1,
       }}
     >
+      <Loader loading={avatarLoading} />
       <StatusBar hidden={false} />
       <CameraComponent
         modalVisible={modalVisible}
@@ -114,7 +137,9 @@ const EditProfileScreen = ({ navigation }) => {
       <View style={styles.ImageContainer}>
         <Avatar.Image
           source={{
-            uri: avatar,
+            uri: user?.avatar
+              ? user.avatar
+              : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
           }}
           size={120}
         />

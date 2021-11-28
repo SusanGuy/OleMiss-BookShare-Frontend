@@ -7,13 +7,13 @@ import Loader from "../../components/Loader";
 import ScreenContainer from "../../components/ScreenContainer";
 import axios from "../../utils/axios";
 
-const SoldBooksScreen = ({ navigation }) => {
+const RequestedBooksScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchSoldBooks = async () => {
+  const fetchRequestedBooks = async () => {
     try {
-      const { data } = await axios.get("/users/me/sale");
+      const { data } = await axios.get("/users/me/requests");
       setBooks(data);
       setLoading(false);
     } catch (error) {
@@ -23,46 +23,43 @@ const SoldBooksScreen = ({ navigation }) => {
 
   const handleBookAlteration = async (id) => {
     try {
-      await axios.post("/sales/markSold/" + id);
+      await axios.post("/requests/markFound/" + id);
       const changedBooks = [...books];
       const index = changedBooks.findIndex((book) => book._id === id);
       changedBooks[index].active = false;
       setBooks(changedBooks);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
+    }
+  };
+
+  const handleBookDeletion = async (id) => {
+    try {
+      await axios.delete("/requests/" + id);
+      setBooks(books.filter((book) => book._id !== id));
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
   const handleBookUpdation = (item) => {
-    navigation.replace("UploadBookScreen", {
-      screen: "UploadBookBaseScreen",
+    navigation.replace("RequestBookScreen", {
+      screen: "RequestBookBaseScreen",
       params: {
         bookState: {
           id: item._id,
-          condition: item.condition,
-          amount: item.amount.toString(),
           course_name: item.course_name,
           course_code: item.course_code,
-          pictures: item.pictures,
           ...item.book,
         },
       },
     });
   };
 
-  const handleBookDeletion = async (id) => {
-    try {
-      await axios.delete("/sales/" + id);
-      setBooks(books.filter((book) => book._id !== id));
-    } catch (error) {
-      console.log(error.response.data);
-    }
-  };
-
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
-      fetchSoldBooks();
+      fetchRequestedBooks();
       return () => {
         isActive = false;
       };
@@ -72,7 +69,7 @@ const SoldBooksScreen = ({ navigation }) => {
   if (!loading && books.length === 0) {
     return (
       <EmptyListPlaceholder>
-        You haven't sold any books in the past yet
+        You haven't requested any books in the past yet
       </EmptyListPlaceholder>
     );
   }
@@ -84,33 +81,19 @@ const SoldBooksScreen = ({ navigation }) => {
           showsVerticalScrollIndicator={false}
           keyExtractor={({ _id }) => _id}
           data={books.sort((a, b) => b.active - a.active)}
-          renderItem={({ item }) =>
-            item.active ? (
-              <TouchableOpacity
-                onPress={() => navigation.push("Details", { id: item._id })}
-                activeOpacity={1}
-                underlayColor="#eee"
-              >
-                <ListCard
-                  handleBookAlteration={handleBookAlteration}
-                  handleBookDeletion={handleBookDeletion}
-                  handleBookUpdation={handleBookUpdation}
-                  item={item}
-                />
-              </TouchableOpacity>
-            ) : (
-              <ListCard
-                handleBookAlteration={handleBookAlteration}
-                handleBookDeletion={handleBookDeletion}
-                handleBookUpdation={handleBookUpdation}
-                item={item}
-              />
-            )
-          }
+          renderItem={({ item }) => (
+            <ListCard
+              handleBookAlteration={handleBookAlteration}
+              handleBookDeletion={handleBookDeletion}
+              handleBookUpdation={handleBookUpdation}
+              requests
+              item={item}
+            />
+          )}
         />
       </ScreenContainer>
     </SafeAreaView>
   );
 };
 
-export default SoldBooksScreen;
+export default RequestedBooksScreen;

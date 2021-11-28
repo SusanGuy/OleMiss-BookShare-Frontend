@@ -4,11 +4,12 @@ import FloatingButton from "./FloatingButton";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import { sendEmail, sendSMS } from "../utils/contact";
+import moment from "moment";
 
-const LeftSwipeActions = ({ requests }) => {
+const LeftSwipeActions = ({ item, requests, handleBookAlteration }) => {
   return (
     <View style={styles.leftSwipeActionContainer}>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => handleBookAlteration(item._id)}>
         <Text
           style={{
             color: "#fff",
@@ -21,7 +22,13 @@ const LeftSwipeActions = ({ requests }) => {
     </View>
   );
 };
-const RightSwipeActions = ({ active, bookmarks }) => {
+const RightSwipeActions = ({
+  item,
+  handleBookDeletion,
+  active,
+  bookmarks,
+  handleBookUpdation,
+}) => {
   return (
     <View
       style={{
@@ -31,6 +38,7 @@ const RightSwipeActions = ({ active, bookmarks }) => {
     >
       {active && !bookmarks && (
         <TouchableOpacity
+          onPress={() => handleBookUpdation(item)}
           style={{
             backgroundColor: "#eec643",
             ...styles.rightSwipeButtonContainer,
@@ -49,6 +57,7 @@ const RightSwipeActions = ({ active, bookmarks }) => {
         />
       )}
       <TouchableOpacity
+        onPress={() => handleBookDeletion(item._id)}
         style={{
           backgroundColor: "#D91848",
           width: bookmarks && 100,
@@ -63,9 +72,20 @@ const RightSwipeActions = ({ active, bookmarks }) => {
   );
 };
 
-export const ListCard = ({ item, requests, profile }) => {
+export const ListCard = ({
+  item,
+  handleBookDeletion,
+  handleBookAlteration,
+  handleBookUpdation,
+  requests,
+  profile,
+}) => {
   const [swiped, setSwiped] = useState(false);
-  const { title, date, active } = item;
+  const {
+    book: { title },
+    createdAt,
+    active,
+  } = item;
   const returnValue = (
     <View
       style={{
@@ -101,7 +121,7 @@ export const ListCard = ({ item, requests, profile }) => {
         }}
       >
         <Text style={styles.info}>
-          {requests ? "Requested" : "Posted"} {date}
+          {requests ? "Requested" : "Posted"} {moment(createdAt).fromNow()}
         </Text>
 
         {!profile && (
@@ -120,12 +140,28 @@ export const ListCard = ({ item, requests, profile }) => {
       </View>
     </View>
   );
+
+  if (profile) {
+    return returnValue;
+  }
   return active ? (
     <Swipeable
       renderLeftActions={() => (
-        <LeftSwipeActions requests={requests} active={active} />
+        <LeftSwipeActions
+          item={item}
+          handleBookAlteration={handleBookAlteration}
+          requests={requests}
+          active={active}
+        />
       )}
-      renderRightActions={() => <RightSwipeActions active={active} />}
+      renderRightActions={() => (
+        <RightSwipeActions
+          item={item}
+          handleBookDeletion={handleBookDeletion}
+          handleBookUpdation={handleBookUpdation}
+          active={active}
+        />
+      )}
       onSwipeableOpen={() => setSwiped(true)}
       onSwipeableClose={() => setSwiped(false)}
     >
@@ -133,7 +169,13 @@ export const ListCard = ({ item, requests, profile }) => {
     </Swipeable>
   ) : (
     <Swipeable
-      renderRightActions={() => <RightSwipeActions active={active} />}
+      renderRightActions={() => (
+        <RightSwipeActions
+          item={item}
+          handleBookDeletion={handleBookDeletion}
+          active={active}
+        />
+      )}
       onSwipeableOpen={() => setSwiped(true)}
       onSwipeableClose={() => setSwiped(false)}
     >
@@ -142,16 +184,20 @@ export const ListCard = ({ item, requests, profile }) => {
   );
 };
 
-const Card = ({ item, feed, bookmarks }) => {
+const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
   if (feed) {
     const {
-      id,
-      user: { name, image },
-      title,
-      course,
-      date,
-      edition,
-      isbn,
+      _id,
+      user: {
+        name,
+        avatar,
+        email,
+        contact_number: { value, visibility },
+      },
+      book: { title, edition, isbn },
+      course_code,
+      course_name,
+      createdAt,
     } = item;
     return (
       <View
@@ -160,11 +206,15 @@ const Card = ({ item, feed, bookmarks }) => {
           ...styles.feedCard,
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.push("Profile", { id: item.user._id })}
+        >
           <Image
             style={styles.avatarImage}
             source={{
-              uri: image,
+              uri: avatar
+                ? avatar
+                : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
             }}
             resizeMode="cover"
           />
@@ -172,8 +222,8 @@ const Card = ({ item, feed, bookmarks }) => {
 
         <View style={styles.requestFeedContainer}>
           <View style={styles.requestUserContainer}>
-            <Text style={styles.userName}>{name} requested</Text>
-            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.userName}>{name}</Text>
+            <Text style={styles.date}>{moment(createdAt).fromNow()}</Text>
           </View>
           <View style={{ width: "90%", flexGrow: 1, flex: 1 }}>
             <Text
@@ -188,7 +238,9 @@ const Card = ({ item, feed, bookmarks }) => {
           </View>
 
           <View style={{ ...styles.subInformation, marginTop: 10 }}>
-            <Text style={styles.info}>For {course} </Text>
+            <Text style={styles.info}>
+              For {course_name} {course_code}
+            </Text>
             <View
               style={{
                 borderRightWidth: 1,
@@ -205,36 +257,35 @@ const Card = ({ item, feed, bookmarks }) => {
           </View>
           <View style={{ ...styles.subInformation, marginTop: 15 }}>
             <FloatingButton
-              onPress={() => sendEmail("anilpanta2@gmail.com", title, true)}
+              onPress={() => sendEmail(email, title, true)}
               size={25}
               padding={10}
               color="#fff"
               backgroundColor="#74758C"
               iconName="mail"
             />
-            <FloatingButton
-              onPress={() => sendSMS("6627158218", title, true)}
-              marginLeft={20}
-              size={25}
-              padding={10}
-              color="#fff"
-              backgroundColor="#74758C"
-              iconName="chatbubbles"
-            />
+            {visibility && value && (
+              <FloatingButton
+                onPress={() => sendSMS(value, title, true)}
+                marginLeft={20}
+                size={25}
+                padding={10}
+                color="#fff"
+                backgroundColor="#74758C"
+                iconName="chatbubbles"
+              />
+            )}
           </View>
         </View>
       </View>
     );
   } else {
     const {
-      title,
-      authorName,
-      image,
-      isbn,
-      price,
+      book: { title, isbn, edition },
+      pictures,
       condition,
       active,
-      edition,
+      amount,
     } = item;
     const cardValue = (
       <View style={[styles.card, { opacity: !active && bookmarks ? 0.6 : 1 }]}>
@@ -248,7 +299,7 @@ const Card = ({ item, feed, bookmarks }) => {
           <Image
             style={styles.image}
             source={{
-              uri: image,
+              uri: pictures[0],
             }}
             resizeMode="cover"
           />
@@ -280,13 +331,13 @@ const Card = ({ item, feed, bookmarks }) => {
           </View>
           <View style={styles.subInformation}>
             <View style={styles.priceContainer}>
-              <Text style={styles.alignedText}>${price.toFixed(2)}</Text>
+              <Text style={styles.alignedText}>${amount.toFixed(2)}</Text>
             </View>
             <View
               style={[
                 styles.priceContainer,
                 {
-                  backgroundColor: condition === "New" ? "#a2d729" : "#eec643",
+                  backgroundColor: condition === "NEW" ? "#a2d729" : "#eec643",
                 },
               ]}
             >
@@ -300,7 +351,12 @@ const Card = ({ item, feed, bookmarks }) => {
     return bookmarks ? (
       <Swipeable
         renderRightActions={() => (
-          <RightSwipeActions bookmarks={bookmarks} active={active} />
+          <RightSwipeActions
+            handleBookDeletion={handleBookDeletion}
+            bookmarks={bookmarks}
+            active={active}
+            item={item}
+          />
         )}
       >
         {cardValue}
@@ -403,13 +459,15 @@ const styles = StyleSheet.create({
   requestUserContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     flexWrap: "wrap",
   },
-  userName: { fontSize: 15, color: "rgb(34, 27, 27)", width: "70%" },
+  userName: { fontSize: 15, color: "rgb(34, 27, 27)", width: "50%" },
   date: {
     fontSize: 12,
     color: "#74758C",
-    width: "30%",
+    width: "50%",
+    flexWrap: "wrap",
   },
   leftSwipeActionContainer: {
     backgroundColor: "#a2d729",

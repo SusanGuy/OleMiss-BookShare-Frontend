@@ -1,12 +1,7 @@
-import React, { useRef, useState } from "react";
-import { View } from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
 import CustomPicker from "../../components/CustomPicker";
 
@@ -61,12 +56,35 @@ export const FinalScreen = ({ route, navigation }) => {
         bookState: {
           ...route?.params?.bookState,
           amount,
+          condition,
           course_name,
           course_code,
         },
       });
     }
   };
+
+  useEffect(() => {
+    if (route?.params?.bookState) {
+      setState({
+        ...state,
+        amount: route?.params?.bookState?.amount
+          ? route.params.bookState.amount
+          : "0",
+        course_name: route?.params?.bookState?.course_name
+          ? route.params.bookState.course_name
+          : "",
+        course_code: route?.params?.bookState?.course_code
+          ? route.params.bookState.course_code
+          : "",
+      });
+      setCondition(
+        route?.params?.bookState?.condition
+          ? route.params.bookState.condition
+          : options[0]
+      );
+    }
+  }, [route]);
 
   return (
     <ScrollView

@@ -1,21 +1,41 @@
-import React, { useRef, useState } from "react";
-import { View } from "react-native";
-import * as Animatable from "react-native-animatable";
-import { Caption, Title } from "react-native-paper";
+import React, { useRef, useState, useEffect } from "react";
 import {
+  View,
+  Alert,
+  ActivityIndicator,
   ScrollView,
   TextInput,
   TouchableOpacity,
-} from "react-native-gesture-handler";
+} from "react-native";
+import * as Animatable from "react-native-animatable";
+import { Caption, Title } from "react-native-paper";
+
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
+import axios from "../../utils/axios";
 
 export const FinalScreen = ({ route, navigation }) => {
   const [state, setState] = useState({
     course_name: "",
     course_code: "",
     error: {},
+    errorMessage: "",
   });
-  const { amount, course_name, course_code, error } = state;
+  const [loading, setLoading] = useState(false);
+  const { course_name, course_code, error, errorMessage } = state;
+
+  useEffect(() => {
+    if (route?.params?.bookState) {
+      setState({
+        ...state,
+        course_name: route?.params?.bookState?.course_name
+          ? route.params.bookState.course_name
+          : "",
+        course_code: route?.params?.bookState?.course_code
+          ? route.params.bookState.course_code
+          : "",
+      });
+    }
+  }, [route]);
 
   const validateInput = () => {
     const validationErrors = {};
@@ -37,13 +57,40 @@ export const FinalScreen = ({ route, navigation }) => {
 
   const validateInputRef = useRef();
 
-  const onFormSubmit = () => {
+  const onFormSubmit = async () => {
     const isValid = validateInput();
     if (!isValid) {
       validateInputRef.current.shake(800);
     } else {
-      setState({ ...state, error: {} });
-      console.log(route?.params?.bookState);
+      setState({ ...state, error: {}, errorMessage: "" });
+      setLoading(true);
+      const formState = {
+        isbn: route?.params?.bookState?.isbn,
+        title: route?.params?.bookState?.title,
+        edition: route?.params?.bookState?.edition,
+        authors: route?.params.bookState?.authors,
+        course_name: course_name,
+        course_code: course_code,
+      };
+      if (route.params?.bookState?.id) {
+        formState.id = route.params.bookState.id;
+      }
+      try {
+        await axios.post("/requests/", formState);
+        setLoading(false);
+        Alert.alert(
+          `Book ${
+            route.params?.bookState?.id ? "updated" : "requested"
+          } succesfully!`
+        );
+        navigation.replace("RequestedBooksScreen");
+      } catch (err) {
+        setState({
+          ...state,
+          errorMessage: err.response.data.errMessage,
+        });
+        setLoading(false);
+      }
     }
   };
   return (
@@ -97,10 +144,22 @@ export const FinalScreen = ({ route, navigation }) => {
             <Caption style={styles.error}>{error?.courseCodeError}</Caption>
           )}
         </View>
+
+        <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
+          {!loading ? (
+            <Caption style={styles.alignedText}>Request</Caption>
+          ) : (
+            <ActivityIndicator color="#fff" />
+          )}
+        </TouchableOpacity>
+        {errorMessage !== "" && (
+          <Caption
+            style={{ ...styles.error, marginTop: 0, alignSelf: "center" }}
+          >
+            {errorMessage}
+          </Caption>
+        )}
       </Animatable.View>
-      <TouchableOpacity onPress={onFormSubmit} style={styles.SaveButton}>
-        <Caption style={styles.alignedText}>Request</Caption>
-      </TouchableOpacity>
     </ScrollView>
   );
 };

@@ -1,75 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import FloatingButton from "../../components/FloatingButton";
 import SearchBarHeader from "../../components/SearchBarHeader";
-
-const books = [
-  {
-    id: "1",
-    title: "BEGINNING RUST PROGRAMMING",
-    authorName: "MESSIER, RIC",
-    edition: 5,
-    image: "https://wallpaperaccess.com/full/186244.jpg",
-    isbn: 9784041839997,
-    price: 11.54,
-    condition: "Used",
-    active: true,
-  },
-  {
-    id: "2",
-    title: "Network Programming with Go",
-    authorName: "Woodbeck,Adam",
-    edition: 7,
-    image: "https://wallpaperaccess.com/full/1560128.jpg",
-    isbn: 9793762616862,
-    price: 33.5,
-    condition: "New",
-    active: true,
-  },
-  {
-    id: "4",
-    title: "Coding freedom: the ethics and aesthetics of hacking",
-    authorName: "Coleman, E. Gabriella",
-    image: "https://wallpapercave.com/wp/wp4624320.jpg",
-    isbn: 9794814093679,
-    edition: 9,
-    price: 0,
-    condition: "Used",
-    active: false,
-  },
-  {
-    id: "5",
-    title: "Programming with Types: with examples in Elixir",
-    authorName: "Riscutia,Vlad",
-    image:
-      "https://c4.wallpaperflare.com/wallpaper/674/729/123/code-elixir-programming-wallpaper-preview.jpg",
-    isbn: 9789718480847,
-    price: 19.2,
-    condition: "Used",
-    edition: 10,
-    active: false,
-  },
-  {
-    id: "6",
-    title: "Functional programming in R",
-    authorName: "Mailund,Thomas",
-    image:
-      "https://i.pinimg.com/originals/41/82/a9/4182a9dd330c6442c4a1fbc78274d838.png",
-    isbn: 9790839944491,
-    price: 22,
-    edition: 11,
-    condition: "New",
-    active: false,
-  },
-];
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "../../utils/axios";
+import Loader from "../../components/Loader";
 
 const HomeScreen = ({ navigation }) => {
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [text, setText] = useState("");
+
+  const fetchBooks = async () => {
+    try {
+      const { data } = await axios.get("/sales");
+      setBooks(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      fetchBooks();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
+
+  const handleSearch = (text) => {
+    setText(text);
+  };
+
+  const filteredBooks = books.filter(
+    (book) =>
+      book.book.title.toLowerCase().includes(text.toLowerCase()) ||
+      book.course_name.toLowerCase().includes(text.toLowerCase()) ||
+      book.course_code.toLowerCase().includes(text.toLowerCase()) ||
+      book.book.isbn.toLowerCase().includes(text.toLowerCase())
+  );
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <SearchBarHeader navigation={navigation} />
-      {books.length === 0 ? (
+      <SearchBarHeader navigation={navigation} handleSearch={handleSearch} />
+      <Loader loading={loading} />
+      {!loading && books.length === 0 ? (
         <EmptyListPlaceholder>
           Currently, there aren't any books for sale in the platform
         </EmptyListPlaceholder>
@@ -77,16 +57,16 @@ const HomeScreen = ({ navigation }) => {
         <View style={{ flex: 1, backgroundColor: "#fafafa" }}>
           <FlatList
             showsVerticalScrollIndicator={false}
-            keyExtractor={({ id }) => id}
-            data={books}
+            keyExtractor={({ _id }) => _id}
+            data={filteredBooks}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
-                  onPress={() => navigation.push("Details")}
+                  onPress={() => navigation.push("Details", { id: item._id })}
                   activeOpacity={1}
                   underlayColor="#eee"
                 >
-                  <Card item={item} />
+                  <Card navigation={navigation} item={item} />
                 </TouchableOpacity>
               );
             }}

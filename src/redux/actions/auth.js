@@ -2,9 +2,39 @@ import * as actionTypes from "./actionTypes";
 import axios from "../../utils/axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setAuthToken } from "../../utils/auth";
+import { Alert } from "react-native";
 
 export const clearErrors = () => {
   return { type: actionTypes.CLEAR_ERRORS };
+};
+
+export const uploadImage = (photo) => {
+  return async (dispatch) => {
+    try {
+      const fd = new FormData();
+      fd.append("avatar", {
+        name: photo.uri,
+        type: photo.type + "/jpeg",
+        uri: photo.uri,
+      });
+      await axios.post("/users/me/avatar", fd);
+      dispatch(loadUser());
+    } catch (err) {
+      Alert.alert(err.response ? err.response.data.errMessage : err.message);
+      dispatch(authFail(err.response ? err.response.data : err.message));
+    }
+  };
+};
+
+export const deleteImage = () => {
+  return async (dispatch) => {
+    try {
+      await axios.delete("/users/me/avatar");
+      dispatch(loadUser());
+    } catch (err) {
+      dispatch(authFail(err.response ? err.response.data : err.message));
+    }
+  };
 };
 
 export const login = (email, password) => {
@@ -56,6 +86,7 @@ export const signup = (
       } else {
         submitForm.contact_number.visibility = isEnabled;
         await axios.patch("/users/me", submitForm);
+        Alert.alert("Profie updated succesfully!");
       }
       dispatch(loadUser());
     } catch (err) {

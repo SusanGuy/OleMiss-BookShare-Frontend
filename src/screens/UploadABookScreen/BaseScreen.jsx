@@ -1,16 +1,12 @@
-import React, { useRef, useState } from "react";
-import { View } from "react-native";
+import React, { useRef, useState, useEffect } from "react";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import * as Animatable from "react-native-animatable";
 import { Caption, Title } from "react-native-paper";
-import {
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-} from "react-native-gesture-handler";
 import { uploadFormStyles as styles } from "../../constants/sharedStyles";
 import { searchBookByISBN } from "../../utils/searchByIsbn";
 
-export const BaseScreen = ({ navigation }) => {
+let idPresent = false;
+export const BaseScreen = ({ route, navigation }) => {
   const [state, setState] = useState({
     isbn: "",
     error: {},
@@ -42,19 +38,47 @@ export const BaseScreen = ({ navigation }) => {
       validateInputRef.current.shake(800);
     } else {
       setState({ ...state, error: {} });
-      let bookState = { isbn };
-      const data = await searchBookByISBN(isbn);
-      if (data) {
-        bookState = {
-          ...bookState,
-          ...data,
-        };
+      let bookState;
+      if (!idPresent) {
+        bookState = { isbn };
+        const data = await searchBookByISBN(isbn);
+
+        if (data) {
+          bookState = {
+            ...bookState,
+            ...data,
+          };
+        }
+        navigation.push("UploadBookSecondaryScreen", {
+          bookState,
+        });
+      } else {
+        navigation.push("UploadBookSecondaryScreen", {
+          bookState: {
+            ...route?.params?.bookState,
+            authors: route?.params?.bookState?.authors
+              ? route.params.bookState.authors.join(",")
+              : "",
+          },
+        });
       }
-      navigation.push("UploadBookSecondaryScreen", {
-        bookState,
-      });
     }
   };
+
+  useEffect(() => {
+    if (route?.params?.bookState) {
+      idPresent =
+        route &&
+        route.params &&
+        route.params.bookState &&
+        route.params.bookState.id;
+
+      setState({
+        ...state,
+        isbn: route.params.bookState.isbn,
+      });
+    }
+  }, [route]);
 
   return (
     <ScrollView style={{ flex: 1, padding: 10 }}>
