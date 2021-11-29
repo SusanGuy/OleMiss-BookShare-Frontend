@@ -21,6 +21,7 @@ import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "../../redux/actions/auth";
 import { Caption } from "react-native-paper";
+import { openTwoButtonAlert } from "../../utils/alert";
 
 const height = Dimensions.get("window").height;
 
@@ -73,6 +74,17 @@ const DetailsScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleReport = async () => {
+    try {
+      await axios.post("/sales/report/" + book?._id);
+      Alert.alert("Book reported succesfully");
+    } catch (error) {
+      Alert.alert(
+        error?.response?.data ? error.response.data.error : error.message
+      );
+    }
+  };
+
   return (
     <ScrollView style={{ flex: 1, flexDirection: "column" }}>
       <Loader loading={loading} />
@@ -86,7 +98,7 @@ const DetailsScreen = ({ navigation, route }) => {
           resizeMode="cover"
         />
         <TouchableOpacity
-          onPress={() => navigation.pop()}
+          onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
           <Ionicons name="close" size={20} style={styles.alignedText}>
@@ -95,7 +107,12 @@ const DetailsScreen = ({ navigation, route }) => {
         </TouchableOpacity>
         {book && user._id !== book.seller._id && (
           <TouchableOpacity
-            onPress={() => console.log("Reported")}
+            onPress={() => {
+              openTwoButtonAlert(
+                "Are you sure you want to report this book?",
+                handleReport
+              );
+            }}
             style={styles.reportButton}
           >
             <Caption

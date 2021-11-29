@@ -147,7 +147,7 @@ export const BookmarksStackScreen = ({ navigation }) => (
             size={25}
             color="#000"
             backgroundColor="#fff"
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.goBack()}
           ></Icon.Button>
         ),
         headerShown: true,
@@ -188,7 +188,7 @@ export const RequestedBooksStackScreen = ({ navigation }) => (
             size={25}
             color="#000"
             backgroundColor="#fff"
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.goBack()}
           ></Icon.Button>
         ),
         headerShown: true,
@@ -216,7 +216,7 @@ export const SoldBooksStackScreen = ({ navigation }) => (
             size={25}
             color="#000"
             backgroundColor="#fff"
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.goBack()}
           ></Icon.Button>
         ),
         headerShown: true,
@@ -291,7 +291,7 @@ export const UploadABookStackScreen = ({ navigation }) => (
             size={25}
             color="#000"
             backgroundColor="#fff"
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.goBack()}
           ></Icon.Button>
         ),
       }}
@@ -343,7 +343,7 @@ export const RequestABookStackScreen = ({ navigation }) => (
             size={25}
             color="#000"
             backgroundColor="#fff"
-            onPress={() => navigation.pop()}
+            onPress={() => navigation.goBack()}
           ></Icon.Button>
         ),
       }}

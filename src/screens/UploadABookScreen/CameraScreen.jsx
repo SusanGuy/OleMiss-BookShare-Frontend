@@ -149,8 +149,8 @@ export const CameraScreen = connectActionSheet(({ route, navigation }) => {
       try {
         setLoading(true);
         if (route?.params?.bookState?.id) {
-          setLoading(false);
           await axios.patch(`/sales/${route.params.bookState.id}`, formData);
+          setLoading(false);
           Alert.alert("Book Updated succesfully!");
         } else {
           await axios.post("/sales/", formData);

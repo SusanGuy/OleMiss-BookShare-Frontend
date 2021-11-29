@@ -1,10 +1,11 @@
 {
   "expo": {
-    "name": "OleMissBookShare",
+    "name": "OleMiss BookShare",
     "slug": "olemiss-bookshare",
+    "description":"An application to share books with other students on campus",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/customIcon.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

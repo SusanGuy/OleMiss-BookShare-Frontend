@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from "react";
-import { FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import { FlatList, SafeAreaView, RefreshControl } from "react-native";
 import { ListCard } from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import Loader from "../../components/Loader";
@@ -10,6 +10,13 @@ import axios from "../../utils/axios";
 const RequestedBooksScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchRequestedBooks();
+    setRefreshing(false);
+  };
 
   const fetchRequestedBooks = async () => {
     try {
@@ -78,6 +85,9 @@ const RequestedBooksScreen = ({ navigation }) => {
       <ScreenContainer>
         <Loader loading={loading} />
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           showsVerticalScrollIndicator={false}
           keyExtractor={({ _id }) => _id}
           data={books.sort((a, b) => b.active - a.active)}

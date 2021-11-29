@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  View,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import { useFocusEffect } from "@react-navigation/native";
@@ -12,6 +18,13 @@ const BookmarksScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchBookmarks();
+    setRefreshing(false);
+  };
 
   const fetchBookmarks = async () => {
     try {
@@ -55,6 +68,9 @@ const BookmarksScreen = ({ navigation }) => {
       <View style={{ flex: 1 }}>
         <Loader loading={loading} />
         <FlatList
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           showsVerticalScrollIndicator={false}
           keyExtractor={({ _id }) => _id}
           data={books.sort((a, b) => b.active - a.active)}

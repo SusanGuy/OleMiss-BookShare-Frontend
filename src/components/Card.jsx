@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import FloatingButton from "./FloatingButton";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import { sendEmail, sendSMS } from "../utils/contact";
 import moment from "moment";
 import { Caption } from "react-native-paper";
+import { openTwoButtonAlert } from "../utils/alert";
+import axios from "../utils/axios";
 
 const LeftSwipeActions = ({ item, requests, handleBookAlteration }) => {
   return (
@@ -200,6 +209,18 @@ const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
       course_name,
       createdAt,
     } = item;
+
+    const handleReport = async () => {
+      try {
+        await axios.post("/requests/report/" + _id);
+        Alert.alert("Book reported succesfully");
+      } catch (error) {
+        Alert.alert(
+          error?.response?.data ? error.response.data.error : error.message
+        );
+      }
+    };
+
     return (
       <View
         style={{
@@ -279,7 +300,12 @@ const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
               />
             )}
             <TouchableOpacity
-              onPress={() => console.log("Reported")}
+              onPress={() =>
+                openTwoButtonAlert(
+                  "Are you sure you want to report this book?",
+                  handleReport
+                )
+              }
               style={{
                 marginLeft: "auto",
                 flexWrap: "wrap",

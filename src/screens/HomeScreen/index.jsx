@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { View, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+  RefreshControl,
+} from "react-native";
 import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import FloatingButton from "../../components/FloatingButton";
@@ -12,6 +18,13 @@ const HomeScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [text, setText] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchBooks();
+    setRefreshing(false);
+  };
 
   const fetchBooks = async () => {
     try {
@@ -26,6 +39,7 @@ const HomeScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
+
       fetchBooks();
       return () => {
         isActive = false;
@@ -56,6 +70,9 @@ const HomeScreen = ({ navigation }) => {
       ) : (
         <View style={{ flex: 1, backgroundColor: "#fafafa" }}>
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             showsVerticalScrollIndicator={false}
             keyExtractor={({ _id }) => _id}
             data={filteredBooks}
@@ -84,7 +101,7 @@ const HomeScreen = ({ navigation }) => {
         }}
       >
         <FloatingButton
-          onPress={() => navigation.navigate("UploadBookScreen")}
+          onPress={() => navigation.push("UploadBookScreen")}
           color="#fafafa"
           backgroundColor="#3c91e6"
           iconName="add"

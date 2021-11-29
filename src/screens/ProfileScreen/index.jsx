@@ -4,6 +4,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  Alert,
   StyleSheet,
   Text,
 } from "react-native";
@@ -14,6 +15,7 @@ import { useSelector } from "react-redux";
 import axios from "../../utils/axios";
 import { useFocusEffect } from "@react-navigation/native";
 import Loader from "../../components/Loader";
+import { openTwoButtonAlert } from "../../utils/alert";
 
 const ProfileScreen = ({ route, navigation }) => {
   const [profile, setProfile] = useState(null);
@@ -43,6 +45,17 @@ const ProfileScreen = ({ route, navigation }) => {
     }, [route, id])
   );
 
+  const handleReport = async () => {
+    try {
+      await axios.post("/users/report/" + profile?.id);
+      Alert.alert("User reported succesfully");
+    } catch (error) {
+      Alert.alert(
+        error?.response?.data ? error.response.data.error : error.message
+      );
+    }
+  };
+
   const booksWrapper =
     !loading && profile?.booksForSale && profile.selling > 0 ? (
       profile?.booksForSale.map((item) => (
@@ -68,7 +81,7 @@ const ProfileScreen = ({ route, navigation }) => {
       <Loader loading={loading} />
       <View style={styles.TopContainer}>
         <View style={styles.TopButtonContainer}>
-          <TouchableOpacity onPress={() => navigation.pop()}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon style={styles.Icon} name="close" />
           </TouchableOpacity>
           {profile?.id === id && profile.isAdmin === false && (
@@ -82,7 +95,12 @@ const ProfileScreen = ({ route, navigation }) => {
           {profile?.id !== id && profile?.isAdmin === false && (
             <TouchableOpacity
               style={styles.Icon}
-              onPress={() => console.log("Reported")}
+              onPress={() => {
+                openTwoButtonAlert(
+                  "Are you sure you want to report this user?",
+                  handleReport
+                );
+              }}
             >
               <Caption
                 style={{

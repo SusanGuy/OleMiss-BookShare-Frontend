@@ -45,6 +45,7 @@ export const login = (email, password) => {
       const {
         data: { user, token },
       } = await axios.post("/users/login", submitForm);
+      setAuthToken(token);
       await AsyncStorage.setItem("userToken", token);
       dispatch(authSuccess(token));
       dispatch(loadUser());
@@ -80,7 +81,7 @@ export const signup = (
         const {
           data: { user, token },
         } = await axios.post("/users", submitForm);
-
+        setAuthToken(token);
         await AsyncStorage.setItem("userToken", token);
         dispatch(authSuccess(token));
       } else {

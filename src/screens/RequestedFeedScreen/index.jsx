@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, FlatList, SafeAreaView } from "react-native";
+import { View, FlatList, SafeAreaView, RefreshControl } from "react-native";
 import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
 import FloatingButton from "../../components/FloatingButton";
@@ -11,6 +11,13 @@ import Loader from "../../components/Loader";
 const RequestedScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchBooks();
+    setRefreshing(false);
+  };
 
   const fetchBooks = async () => {
     try {
@@ -42,6 +49,9 @@ const RequestedScreen = ({ navigation }) => {
           </EmptyListPlaceholder>
         ) : (
           <FlatList
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             showsVerticalScrollIndicator={false}
             keyExtractor={({ _id }) => _id}
             data={books}
@@ -61,7 +71,7 @@ const RequestedScreen = ({ navigation }) => {
           }}
         >
           <FloatingButton
-            onPress={() => navigation.navigate("RequestBookScreen")}
+            onPress={() => navigation.push("RequestBookScreen")}
             color="#fff"
             backgroundColor="#3c91e6"
             iconName="add"

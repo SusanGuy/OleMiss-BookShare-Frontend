@@ -17,7 +17,7 @@ export const DrawerContent = (props) => {
             <View style={{ flexDirection: "row", marginTop: 15 }}>
               <TouchableOpacity
                 onPress={() => {
-                  props.navigation.navigate("ProfileScreen");
+                  props.navigation.push("ProfileScreen");
                   props.navigation.toggleDrawer();
                 }}
               >
@@ -56,7 +56,7 @@ export const DrawerContent = (props) => {
               iconName="bookmarks-sharp"
               label="Bookmarks"
               onPress={() => {
-                props.navigation.navigate("BookmarksScreen");
+                props.navigation.push("BookmarksScreen");
                 props.navigation.toggleDrawer();
               }}
             />
@@ -64,7 +64,7 @@ export const DrawerContent = (props) => {
               iconName="book-sharp"
               label="Sold Books"
               onPress={() => {
-                props.navigation.navigate("SoldBooksScreen");
+                props.navigation.push("SoldBooksScreen");
                 props.navigation.toggleDrawer();
               }}
             />
@@ -72,7 +72,7 @@ export const DrawerContent = (props) => {
               iconName="ios-pricetag"
               label="Requested Books"
               onPress={() => {
-                props.navigation.navigate("RequestedBooksScreen");
+                props.navigation.push("RequestedBooksScreen");
                 props.navigation.toggleDrawer();
               }}
             />
@@ -80,7 +80,7 @@ export const DrawerContent = (props) => {
               iconName="person-sharp"
               label="Profile"
               onPress={() => {
-                props.navigation.navigate("ProfileScreen");
+                props.navigation.push("ProfileScreen");
                 props.navigation.toggleDrawer();
               }}
             />
