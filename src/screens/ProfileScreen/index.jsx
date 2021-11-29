@@ -71,12 +71,28 @@ const ProfileScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => navigation.pop()}>
             <Icon style={styles.Icon} name="close" />
           </TouchableOpacity>
-          {profile?.id === id && (
+          {profile?.id === id && profile.isAdmin === false && (
             <TouchableOpacity
               style={styles.Icon}
               onPress={() => navigation.push("Edit Profile")}
             >
               <Icon style={styles.Icon} name="create-outline" />
+            </TouchableOpacity>
+          )}
+          {profile?.id !== id && profile?.isAdmin === false && (
+            <TouchableOpacity
+              style={styles.Icon}
+              onPress={() => console.log("Reported")}
+            >
+              <Caption
+                style={{
+                  color: "#fff",
+                  fontSize: 15,
+                  fontWeight: "bold",
+                }}
+              >
+                Report
+              </Caption>
             </TouchableOpacity>
           )}
         </View>
@@ -85,7 +101,7 @@ const ProfileScreen = ({ route, navigation }) => {
             source={{
               uri: profile?.avatar
                 ? profile.avatar
-                : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+                : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
             }}
             size={100}
           />
@@ -134,6 +150,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
+    alignItems: "center",
   },
   Icon: {
     color: "#fff",

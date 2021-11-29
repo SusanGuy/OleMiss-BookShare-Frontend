@@ -139,7 +139,7 @@ const EditProfileScreen = ({ navigation }) => {
           source={{
             uri: user?.avatar
               ? user.avatar
-              : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+              : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
           }}
           size={120}
         />

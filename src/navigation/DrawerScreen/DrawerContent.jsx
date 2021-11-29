@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar, Title, Caption, Drawer } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
@@ -15,15 +15,23 @@ export const DrawerContent = (props) => {
         <View style={styles.drawerContent}>
           <View style={styles.userInfoSection}>
             <View style={{ flexDirection: "row", marginTop: 15 }}>
-              <Avatar.Image
-                source={{
-                  uri:
-                    user && user.avatar
-                      ? user.avatar
-                      : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+              <TouchableOpacity
+                onPress={() => {
+                  props.navigation.navigate("ProfileScreen");
+                  props.navigation.toggleDrawer();
                 }}
-                size={50}
-              />
+              >
+                <Avatar.Image
+                  source={{
+                    uri:
+                      user && user.avatar
+                        ? user.avatar
+                        : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+                  }}
+                  size={50}
+                />
+              </TouchableOpacity>
+
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
                 <Title style={styles.title}>{user && user.name}</Title>
                 <Caption style={styles.caption}>

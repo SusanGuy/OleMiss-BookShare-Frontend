@@ -20,6 +20,7 @@ import Loader from "../../components/Loader";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { loadUser } from "../../redux/actions/auth";
+import { Caption } from "react-native-paper";
 
 const height = Dimensions.get("window").height;
 
@@ -92,6 +93,22 @@ const DetailsScreen = ({ navigation, route }) => {
             Close
           </Ionicons>
         </TouchableOpacity>
+        {book && user._id !== book.seller._id && (
+          <TouchableOpacity
+            onPress={() => console.log("Reported")}
+            style={styles.reportButton}
+          >
+            <Caption
+              style={{
+                color: "#fff",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              Report
+            </Caption>
+          </TouchableOpacity>
+        )}
       </View>
       <View style={styles.container}>
         {!notAllowed && (
@@ -172,11 +189,14 @@ const DetailsScreen = ({ navigation, route }) => {
                 backgroundColor="#000"
                 color="#fff"
               />
-              {book?.contact_number?.visibility &&
-                book?.contact_number?.value && (
+              {book?.seller?.contact_number?.visibility &&
+                book?.seller?.contact_number?.value && (
                   <FloatingButton
                     onPress={() =>
-                      sendSMS(book?.contact_number?.value, book?.book?.title)
+                      sendSMS(
+                        book?.seller?.contact_number?.value,
+                        book?.book?.title
+                      )
                     }
                     marginLeft={20}
                     iconName="chatbubble"
@@ -197,6 +217,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: height * 0.4,
+    opacity: 0.9,
   },
   backButton: {
     position: "absolute",
@@ -276,6 +297,12 @@ const styles = StyleSheet.create({
   amountConditionValue: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  reportButton: {
+    position: "absolute",
+    color: "#fff",
+    top: 40,
+    right: 10,
   },
   authorInfo: {
     marginTop: 25,

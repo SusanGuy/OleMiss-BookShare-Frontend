@@ -5,6 +5,7 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { Ionicons as Icon } from "@expo/vector-icons";
 import { sendEmail, sendSMS } from "../utils/contact";
 import moment from "moment";
+import { Caption } from "react-native-paper";
 
 const LeftSwipeActions = ({ item, requests, handleBookAlteration }) => {
   return (
@@ -214,7 +215,7 @@ const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
             source={{
               uri: avatar
                 ? avatar
-                : "https://avatars2.githubusercontent.com/u/31829258?height=180&v=4&width=180",
+                : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
             }}
             resizeMode="cover"
           />
@@ -255,7 +256,9 @@ const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
           <View style={{ ...styles.subInformation, marginTop: 10 }}>
             <Text style={styles.info}>Edition: {edition} </Text>
           </View>
-          <View style={{ ...styles.subInformation, marginTop: 15 }}>
+          <View
+            style={{ ...styles.subInformation, marginTop: 15, width: "80%" }}
+          >
             <FloatingButton
               onPress={() => sendEmail(email, title, true)}
               size={25}
@@ -275,6 +278,19 @@ const Card = ({ item, feed, bookmarks, navigation, handleBookDeletion }) => {
                 iconName="chatbubbles"
               />
             )}
+            <TouchableOpacity
+              onPress={() => console.log("Reported")}
+              style={{
+                marginLeft: "auto",
+                flexWrap: "wrap",
+              }}
+            >
+              <Caption
+                style={{ color: "#A89E9E", fontSize: 15, fontWeight: "bold" }}
+              >
+                Report
+              </Caption>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -386,6 +402,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: "row",
     marginBottom: 20,
+    width: "100%",
   },
 
   image: {
@@ -455,18 +472,19 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     flexDirection: "column",
     padding: 10,
+    width: "100%",
   },
   requestUserContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
     flexWrap: "wrap",
+    width: "85%",
   },
-  userName: { fontSize: 15, color: "rgb(34, 27, 27)", width: "50%" },
+  userName: { fontSize: 15, color: "rgb(34, 27, 27)" },
   date: {
     fontSize: 12,
     color: "#74758C",
-    width: "50%",
     flexWrap: "wrap",
   },
   leftSwipeActionContainer: {

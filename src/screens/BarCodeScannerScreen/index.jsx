@@ -2,22 +2,29 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, TouchableOpacity } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Ionicons as Icon } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 
 const BarCodeScannerScreen = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const initializeCamera = async () => {
+    setScanned(false);
+    const { status } = await BarCodeScanner.requestPermissionsAsync();
+    setHasPermission(status === "granted");
+  };
 
-  useEffect(() => {
-    (async () => {
-      setScanned(false);
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+      initializeCamera();
+      return () => {
+        isActive = false;
+      };
+    }, [])
+  );
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    navigation.push("UploadBookBaseScreen", { isbn: [type, data] });
+    navigation.push("UploadBookBaseScreen", { isbn: data });
   };
 
   if (hasPermission === null) {

@@ -39,6 +39,7 @@ export const BaseScreen = ({ route, navigation }) => {
     } else {
       setState({ ...state, error: {} });
       let bookState;
+
       if (!idPresent) {
         bookState = { isbn };
         const data = await searchBookByISBN(isbn);
@@ -76,6 +77,11 @@ export const BaseScreen = ({ route, navigation }) => {
       setState({
         ...state,
         isbn: route.params.bookState.isbn,
+      });
+    } else if (route?.params?.isbn) {
+      setState({
+        ...state,
+        isbn: route.params.isbn,
       });
     }
   }, [route]);

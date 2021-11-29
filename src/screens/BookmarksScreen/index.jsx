@@ -57,7 +57,7 @@ const BookmarksScreen = ({ navigation }) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           keyExtractor={({ _id }) => _id}
-          data={books}
+          data={books.sort((a, b) => b.active - a.active)}
           renderItem={({ item }) =>
             item.active ? (
               <TouchableOpacity
