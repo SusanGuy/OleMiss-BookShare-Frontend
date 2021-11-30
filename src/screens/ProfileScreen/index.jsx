@@ -20,7 +20,7 @@ import { openTwoButtonAlert } from "../../utils/alert";
 const ProfileScreen = ({ route, navigation }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  let id = useSelector((state) => state.auth.user._id);
+  const user = useSelector((state) => state.auth.user);
 
   const fetchUser = async (id) => {
     try {
@@ -37,12 +37,12 @@ const ProfileScreen = ({ route, navigation }) => {
       let isActive = true;
 
       fetchUser(
-        route && route.params && route.params.id ? route.params.id : id
+        route && route.params && route.params.id ? route.params.id : user._id
       );
       return () => {
         isActive = false;
       };
-    }, [route, id])
+    }, [route, user])
   );
 
   const handleReport = async () => {
@@ -84,7 +84,7 @@ const ProfileScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon style={styles.Icon} name="close" />
           </TouchableOpacity>
-          {profile?.id === id && profile.isAdmin === false && (
+          {profile && user && profile.id === user._id && (
             <TouchableOpacity
               style={styles.Icon}
               onPress={() => navigation.push("Edit Profile")}
@@ -92,7 +92,7 @@ const ProfileScreen = ({ route, navigation }) => {
               <Icon style={styles.Icon} name="create-outline" />
             </TouchableOpacity>
           )}
-          {profile?.id !== id && profile?.isAdmin === false && (
+          {profile && user && profile.id !== user._id && !user.isAdmin && (
             <TouchableOpacity
               style={styles.Icon}
               onPress={() => {

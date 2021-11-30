@@ -3,11 +3,13 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Avatar, Title, Caption, Drawer } from "react-native-paper";
 import { DrawerContentScrollView } from "@react-navigation/drawer";
 import CustomDrawerItem from "../../components/CustomDrawerItem";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signout } from "../../redux/actions/auth";
 
 export const DrawerContent = (props) => {
-  const user = useSelector((state) => state.auth.user);
+  const user = props.user;
+  const isAdmin = user && user.isAdmin === true;
+
   const dispatch = useDispatch();
   return (
     <View style={{ flex: 1 }}>
@@ -51,39 +53,69 @@ export const DrawerContent = (props) => {
                 });
               }}
             />
-
-            <CustomDrawerItem
-              iconName="bookmarks-sharp"
-              label="Bookmarks"
-              onPress={() => {
-                props.navigation.push("BookmarksScreen");
-                props.navigation.toggleDrawer();
-              }}
-            />
-            <CustomDrawerItem
-              iconName="book-sharp"
-              label="Sold Books"
-              onPress={() => {
-                props.navigation.push("SoldBooksScreen");
-                props.navigation.toggleDrawer();
-              }}
-            />
-            <CustomDrawerItem
-              iconName="ios-pricetag"
-              label="Requested Books"
-              onPress={() => {
-                props.navigation.push("RequestedBooksScreen");
-                props.navigation.toggleDrawer();
-              }}
-            />
-            <CustomDrawerItem
-              iconName="person-sharp"
-              label="Profile"
-              onPress={() => {
-                props.navigation.push("ProfileScreen");
-                props.navigation.toggleDrawer();
-              }}
-            />
+            {!isAdmin ? (
+              <>
+                <CustomDrawerItem
+                  iconName="bookmarks-sharp"
+                  label="Bookmarks"
+                  onPress={() => {
+                    props.navigation.push("BookmarksScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+                <CustomDrawerItem
+                  iconName="book-sharp"
+                  label="Sold Books"
+                  onPress={() => {
+                    props.navigation.push("SoldBooksScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+                <CustomDrawerItem
+                  iconName="ios-pricetag"
+                  label="Requested Books"
+                  onPress={() => {
+                    props.navigation.push("RequestedBooksScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+                <CustomDrawerItem
+                  iconName="person-sharp"
+                  label="Profile"
+                  onPress={() => {
+                    props.navigation.push("ProfileScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <CustomDrawerItem
+                  iconName="book-sharp"
+                  label="Reported Sales"
+                  onPress={() => {
+                    props.navigation.push("ReportedSalesScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+                <CustomDrawerItem
+                  iconName="ios-pricetag"
+                  label="Reported Requests"
+                  onPress={() => {
+                    props.navigation.push("ReportedRequestsScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+                <CustomDrawerItem
+                  iconName="bookmarks-sharp"
+                  label="Reported Users"
+                  onPress={() => {
+                    props.navigation.push("ReportedUsersScreen");
+                    props.navigation.toggleDrawer();
+                  }}
+                />
+              </>
+            )}
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>

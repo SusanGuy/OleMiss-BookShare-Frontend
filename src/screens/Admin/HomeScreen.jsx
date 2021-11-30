@@ -6,18 +6,16 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
-import Card from "../../components/Card";
 import EmptyListPlaceholder from "../../components/EmptyListPlaceholder";
-import FloatingButton from "../../components/FloatingButton";
-import SearchBarHeader from "../../components/SearchBarHeader";
 import { useFocusEffect } from "@react-navigation/native";
 import axios from "../../utils/axios";
 import Loader from "../../components/Loader";
+import AdminCard from "../../components/AdminCard";
 
 const HomeScreen = ({ navigation }) => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [text, setText] = useState("");
+
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -28,11 +26,21 @@ const HomeScreen = ({ navigation }) => {
 
   const fetchBooks = async () => {
     try {
-      const { data } = await axios.get("/sales");
+      const { data } = await axios.get("/admin/sales");
       setBooks(data);
       setLoading(false);
     } catch (error) {
+      console.log(error.response.data);
       setLoading(false);
+    }
+  };
+
+  const handleBookDeletion = async (id) => {
+    try {
+      await axios.delete("/admin/sales/" + id);
+      setBooks(books.filter((book) => book._id !== id));
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -46,22 +54,8 @@ const HomeScreen = ({ navigation }) => {
       };
     }, [])
   );
-
-  const handleSearch = (text) => {
-    setText(text);
-  };
-
-  const filteredBooks = books.filter(
-    (book) =>
-      book.book.title.toLowerCase().includes(text.toLowerCase()) ||
-      book.course_name.toLowerCase().includes(text.toLowerCase()) ||
-      book.course_code.toLowerCase().includes(text.toLowerCase()) ||
-      book.book.isbn.toLowerCase().includes(text.toLowerCase())
-  );
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
-      <SearchBarHeader navigation={navigation} handleSearch={handleSearch} />
+    <SafeAreaView style={{ flex: 1 }}>
       <Loader loading={loading} />
       {!loading && books.length === 0 ? (
         <EmptyListPlaceholder>
@@ -75,7 +69,7 @@ const HomeScreen = ({ navigation }) => {
             }
             showsVerticalScrollIndicator={false}
             keyExtractor={({ _id }) => _id}
-            data={filteredBooks}
+            data={books}
             renderItem={({ item }) => {
               return (
                 <TouchableOpacity
@@ -83,30 +77,17 @@ const HomeScreen = ({ navigation }) => {
                   activeOpacity={1}
                   underlayColor="#eee"
                 >
-                  <Card navigation={navigation} item={item} />
+                  <AdminCard
+                    handleBookDeletion={handleBookDeletion}
+                    navigation={navigation}
+                    item={item}
+                  />
                 </TouchableOpacity>
               );
             }}
           />
         </View>
       )}
-      <View
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "absolute",
-          bottom: 15,
-          right: 10,
-        }}
-      >
-        <FloatingButton
-          onPress={() => navigation.push("UploadBookScreen")}
-          color="#fafafa"
-          backgroundColor="#3c91e6"
-          iconName="add"
-        />
-      </View>
     </SafeAreaView>
   );
 };

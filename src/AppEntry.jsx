@@ -9,6 +9,7 @@ import Loader from "./components/Loader";
 const AppEntry = () => {
   const dispatch = useDispatch();
   const userToken = useSelector((state) => state.auth.token);
+  const user = useSelector((state) => state.auth.user);
   const isLoading = useSelector((state) => state.auth.loading);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const AppEntry = () => {
 
   return (
     <NavigationContainer theme={CustomDefaultTheme}>
-      <RootStackScreen userToken={userToken} />
+      <RootStackScreen user={user} userToken={userToken} />
     </NavigationContainer>
   );
 };

@@ -33,7 +33,7 @@ const DetailsScreen = ({ navigation, route }) => {
     user.bookmarks.find((bookmark) => bookmark === book?._id) !== undefined;
 
   const dispatch = useDispatch();
-  const notAllowed = (book && user._id === book.seller._id) || user._id.isAdmin;
+  const notAllowed = (book && user._id === book.seller._id) || user.isAdmin;
 
   const fetchBook = async (id) => {
     try {
@@ -105,7 +105,7 @@ const DetailsScreen = ({ navigation, route }) => {
             Close
           </Ionicons>
         </TouchableOpacity>
-        {book && user._id !== book.seller._id && (
+        {book && user._id !== book.seller._id && !user.isAdmin && (
           <TouchableOpacity
             onPress={() => {
               openTwoButtonAlert(

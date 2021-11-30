@@ -1,23 +1,23 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import MainTabScreen from "../MainTabScreen";
-import { FeedStackScreen } from "../RootStackScreen/StackScreens";
 import { DrawerContent } from "./DrawerContent";
 
 const Drawer = createDrawerNavigator();
 
-const DrawerScreen = () => {
+const DrawerScreen = ({ user }) => {
   return (
     <Drawer.Navigator
       focused
-      drawerContent={(props) => <DrawerContent {...props} />}
+      drawerContent={(props) => <DrawerContent user={user} {...props} />}
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Drawer.Screen name="HomeDrawer" component={MainTabScreen} />
-      <Drawer.Screen name="FeedDrawer" component={FeedStackScreen} />
+      <Drawer.Screen name="HomeDrawer">
+        {(props) => <MainTabScreen user={user} {...props} />}
+      </Drawer.Screen>
     </Drawer.Navigator>
   );
 };
